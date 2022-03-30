@@ -1,4 +1,4 @@
-#include <stdio.h>						//call library
+#include <stdio.h>						//bring headerfile
 
 void main() {							//start main return int
 	int num1, num2;						//set variables names
