@@ -1,7 +1,7 @@
 #include <stdio.h>						//bring headerfile
 
 void main() {							//start main return int
-	int num1, num2;						//set variables names
+	int num1, num2;						//set variables names(naming)
 	printf("Input number a, b: ");		//output
 	scanf_s("%d %d", &num1, &num2);		//save values in variables address
 
