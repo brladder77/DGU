@@ -1,0 +1,19 @@
+#include <stdio.h>		//bring headerfile
+void main() {			//start main
+	
+	printf("알파벳 소문자 5개를 입력하시오 : ");	//request users to input 5 small letter
+	char a1, a2, a3, a4, a5;			//set variables names(naming)
+	scanf_s("%c ", &a1);				//save values in variable address
+	scanf_s("%c ", &a2);				//〃
+	scanf_s("%c ", &a3);				//〃
+	scanf_s("%c ", &a4);				//〃
+	scanf_s("%c", &a5);					//〃
+
+	printf("입력된 소문자를 대문자로 바꾸면 ");		//print content
+	printf("%c ", a1 - 32);				//change small letter to capital letter than print
+	printf("%c ", a2 - 32);				//〃
+	printf("%c ", a3 - 32);				//〃
+	printf("%c ", a4 - 32);				//〃
+	printf("%c", a5 - 32);				//〃
+	printf(" 입니다");					//print content
+}
