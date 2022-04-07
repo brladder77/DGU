@@ -1,0 +1,38 @@
+#include <stdio.h>
+void main() {
+
+	printf("a b\n");			//정상적으로 출력된다				
+	printf("a\0 b\n");			//a만 출력되는 것을 보니 \0 뒤는 무시된다는 것을 유추가능
+	printf("\n");				//한 줄 띄고
+	printf("a\0 basdf\n");		//테스트해보니 \0이 null이 되어 전부 무시됨	
+	printf("\n\n");				//두 줄 띄고
+
+	printf("\a");				//"띠리링" 하는 컴퓨터 작동 중 문제가 발생했을 때 나는 경고음이 발생함
+
+	printf("a\b b\n");			//띄어쓰기와 b만 출력됨. a 출력 후 backspace 해 그 위에 쓰는 듯
+	printf("ab\bcd \n\n");		//한칸만 backspace 됨을 확인가능
+
+	printf("a b\n");			//비교군
+	printf("a\t b\n\n");		//a b 사이에 tab 만큼 거리가 벌어진다는 것을 확인가능
+
+	printf("a b\n");			//비교군
+	printf("a \n b\n\n");		//a b 사이에 줄바꿈이 일어남
+
+	printf("a b\n");			//비교군
+	printf("a\v b\n\n");		//이상한 기호가 하나 출력된다. 컴파일에서 라인피드 역할을 하는 듯 싶은데 여기서는 이 기호 하나를 출력하는듯
+
+	printf("a b\n");			//비교군
+	printf("a\f b\n\n");		//수직탭과 마찬가지로 이상한 기호 하나 출력. 프린터에서 강제적으로 다음 페이지로 넘길 때 사용한다
+
+	printf("hello b\n");			//비교군
+	printf("hello\r b\n\n");		//\b 는 커서를 한 칸 앞으로 이동하지만 \r 은 커서를 라인 처음으로 이동시킨다는 것을 알 수 있다.
+
+	//printf("a" b\n");			//비교군
+	printf("a\" b\n\n");		//printf 내에 "를 한번만 쓰면 출력이 끝나버리기 때문에 오류 발생. 앞에 \를 넣어 " 출력가능
+
+	printf("a' b\n");			//비교군
+	printf("a\' b\n\n");		//원래도 출력이 잘 되는데 무슨 차이가 있는지 잘 모르겠다
+
+	printf("a\ b\n");			//비교군
+	printf("a\\ b\n");			//\가 혼자 있으면 위의 비교군을 통해 출력이 되지 않음을 알 수 있다. \\를 두개 입력해줘야함
+}
