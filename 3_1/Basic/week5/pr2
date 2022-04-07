@@ -1,0 +1,15 @@
+#include <stdio.h>			//bring header file
+void main() {				//start main
+
+	printf("1~9 사이의 숫자 2개를 입력하시오 : ");	//request users to put two numbers between 1 to 9
+	char num1, num2;							//set variables names(naming)
+	scanf_s("%c ", &num1);						//save values in variable address
+	scanf_s("%c", &num2);						//〃
+	int num3 = num1 - 48;						//change char valuee to int
+	int num4 = num2 - 48;						//〃
+
+	printf("%d + %d = %d\n", num3, num4, num3 + num4);		//plus int values than print
+	printf("%d - %d = %d\n", num3, num4, num3 - num4);		//minus int values than print
+	printf("%d * %d = %d\n", num3, num4, num3 * num4);		//multiple int values than print
+	printf("%d / %d = %f\n", num3, num4, (float)num3 / num4);	//change int values to decimal point than divide 
+}
