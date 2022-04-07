@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <limits.h>				//각 자료형의 최댓값가 최솟값을 나타내기 위해 불러옴
+#include <float.h>				//각 자료형의 최댓값가 최솟값을 나타내기 위해 불러옴
+int main() {
+
+	short s_max = SHRT_MAX;
+	printf("s_max = %d\n", s_max);		//short 의 최댓값
+	s_max = s_max + 1;
+	printf("s_max = %d\n", s_max);		//최댓값에 1을 더하니 최댓값을 넘어버려 오버플로우 발생. 최솟값부터 다시 시작한다
+	short s_min = SHRT_MIN;
+	printf("s_min = %d\n", s_min);		//short 의 최솟값
+	s_min = s_min - 1;
+	printf("s_min = %d\n\n", s_min);	//최솟값에서 1을 빼니 최소 범위를 벗어나 언더플로우 발생. 반대로 최댓값부터 다시 시작한다.
+
+	int i_max = INT_MAX;
+	printf("i_max = %d\n", i_max);		//int 의 최댓값
+	i_max = i_max + 1;
+	printf("i_max = %d\n", i_max);		//최댓값에 1을 더하니 최댓값을 넘어서 오버플로우 발생. 최솟값부터 다시 시작한다
+	int i_min = INT_MIN;
+	printf("i_min = %d\n", i_min);		//int 의 최솟값
+	i_min = i_min - 1;
+	printf("i_min = %d\n\n", i_min);	//최솟값에서 1을 빼니 최소 범위를 벗어나 언더플로우 발생. 반대로 최댓값부터 다시 시작한다.
+
+	char c_max = CHAR_MAX;
+	printf("c_max = %d\n", c_max);		//char 의 최댓값
+	c_max = c_max + 1;
+	printf("c_max = %d\n", c_max);		//최댓값에 1을 더하니 최댓값을 넘어서 오버플로우 발생. 최솟값부터 다시 시작한다
+	char c_min = CHAR_MIN;
+	printf("c_min = %d\n", c_min);		//char 의 최솟값
+	c_min = c_min - 1;
+	printf("c_min = %d\n\n", c_min);	//최솟값에서 1을 빼니 최소 범위를 벗어나 언더플로우 발생. 반대로 최댓값부터 다시 시작한다.
+
+	float f_max = FLT_MAX;
+	printf("f_max = %e\n", f_max);		//float 의 최댓값
+	f_max = f_max + 1000000;
+	printf("f_max = %e\n", f_max);		//최댓값에 큰 값을 더했는데 변화가 없다. 정상적인 출력이 안된다.
+	f_max = f_max * 1000000;
+	printf("f_max = %e\n", f_max);		//최댓값에 큰 값을 곱하자 오버플로우 발생하여 inf 무한대 표시 출력
+	float f_min = FLT_MIN;
+	printf("f_min = %g\n", f_min);		//float 의 최솟값
+	f_min = f_min - 1;
+	printf("f_min = %g\n\n", f_min);	//마찬가지로 정상적으로 출력이 되지 않는다
+
+	float over = 1e234;
+	printf("over = %f\n", over);		//float 자료형에 매우 큰 수를 넣어 오버플로우 발생시키자 inf 나온다.
+
+	float x = 1.23456e-45;
+	float y = 1.23456e-46;
+	printf("x = %e\n", x);
+	printf("y = %e\n", y);				//매우 작은 수를 나타내다 범위를 넘어서는 순간 언더플로우 발생. 제대로 출력이 되지 않는다.
+}
