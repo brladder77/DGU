@@ -2,7 +2,7 @@
 
 void main() {                   //start main
 
-    printf("3개의 숫자를 입력하시오 : ");                     //reuest users to input 3 numbers
+    printf("3개의 숫자를 입력하시오 : ");                     //request users to input 3 numbers
     float num1, num2, num3, a;                                     //set variables names(naming)                                     
     scanf_s("%f %f %f", &num1, &num2, &num3);                   //save values in variable address
     if (num2 > num1) {          //if num2 value is bigger than num1 value
