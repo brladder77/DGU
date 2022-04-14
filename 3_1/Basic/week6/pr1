@@ -38,7 +38,7 @@ void main() {                   //start main
             printf("삼각형이 아닙니다.\n");
         }
         else {          //else biggest value is smaller than the sum of the rest
-            printf("예각삼각형\n");
+            printf("둔각삼각형\n");
         }
     }
 }
