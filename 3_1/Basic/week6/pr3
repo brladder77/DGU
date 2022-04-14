@@ -17,10 +17,10 @@ int main() {        //start main
     srand(1);               //change seed to 1
     int g = rand();         //put random value in g (seed by 1)
     int h = rand();         //put random value in f (seed by 1)
-    printf("%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", a, b, c, d, e, f, g, h);     //print each values
+    printf("%d\n%d\n\n%d\n%d\n\n%d\n\n%d\n\n%d\n%d\n\n", a, b, c, d, e, f, g, h);     //print each values
 
     srand(time(NULL));      //change seed to time
     for (int i = 0; i < 10; i++)    //loop 10 times
         printf(" %d\n", rand());    //print random value (seed by time)
-    printf("%d", time(NULL));       //print time value
+    printf("\n%d", time(NULL));       //print time value
 }
