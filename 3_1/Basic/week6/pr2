@@ -1,0 +1,19 @@
+#include <stdio.h>      //bring headerfile
+
+void main() {           //start main
+
+    printf("점 (a, b)에 해당하는 a, b를 차례로 입력해주세요 : ");       //request users to input 2 values of a coordinate
+    float a, b, x, y, r;        //set variables names(naming)
+    scanf_s("%f %f", &a, &b);   //save values in variable address
+    printf("점 (x, y)에 해당하는 x, y를 차례로 입력해주세요 : ");   //request users to input 2 values of b coordinate
+    scanf_s("%f %f", &x, &y);   //save values in variable address
+    printf("반지름 r를 입력해주세요 : ");     //request users to input radius value
+    scanf_s("%f", &r);  //save value in variable address
+
+    if ((a - x) * (a - x) + (b - y) * (b - y) <= r * r) {   //equation of checking does b coordinate is inside of a coordinate
+        printf("점 (x,y)는 원 안에 있습니다.\n");
+    }
+    else {      //if condition does not satisfy the equation
+        printf("점 (x,y)는 원 밖에 있습니다.\n");
+    }
+}
