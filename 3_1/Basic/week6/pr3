@@ -1,0 +1,26 @@
+#include  <stdio.h>     //bring headerfile
+#include <stdlib.h>     //"
+#include <time.h>       //"
+
+int main() {        //start main
+
+    srand(time(NULL));      //put time value in seed 
+    int a = rand();         //put random value in a (seed by time)
+    int b = rand();         //put random value in b (seed by time)
+    srand(1);               //change seed to 1
+    int c = rand();         //put random value in c (seed by 1)
+    int d = rand();         //put random value in d (seed by 1)
+    srand(2);               //change seed to 2
+    int e = rand();         //put random value in e (seed by 2)
+    srand(3);               //change seed to 3
+    int f = rand();         //put random value in f (seed by 3)
+    srand(1);               //change seed to 1
+    int g = rand();         //put random value in g (seed by 1)
+    int h = rand();         //put random value in f (seed by 1)
+    printf("%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", a, b, c, d, e, f, g, h);     //print each values
+
+    srand(time(NULL));      //change seed to time
+    for (int i = 0; i < 10; i++)    //loop 10 times
+        printf(" %d\n", rand());    //print random value (seed by time)
+    printf("%d", time(NULL));       //print time value
+}
