@@ -1,1 +1,44 @@
+#include <stdio.h>              //bring headerfile
 
+void main() {                   //start main
+
+    printf("3개의 숫자를 입력하시오 : ");                     //reuest users to input 3 numbers
+    float num1, num2, num3, a;                                     //set variables names(naming)                                     
+    scanf_s("%f %f %f", &num1, &num2, &num3);                   //save values in variable address
+    if (num2 > num1) {          //if num2 value is bigger than num1 value
+        a = num2;               //put num2 value in a 
+        num2 = num1;            //put num1 value in num2
+        num1 = a;               //put a value in num1
+    }
+    if (num3 > num1) {          //if num3 value is bigger than num1 value
+        a = num3;               //put num3 value in a
+        num3 = num2;            //put num2 value in num3
+        num2 = num1;            //put num1 value in num2
+        num1 = a;               //put a value in num1
+    }
+    if (num3 > num2) {          //if num3 value is bigger than num2 value
+        a = num3;               //put num3 value in a
+        num2 = num3;            //put num3 value in num2
+        num2 = a;               //put a value in num2
+    }
+    //8~23 line code listing each value by size (num1<num2<num3)
+    if (num3 * num3 + num2 * num2 > num1 * num1) {      //if square of the biggest value is shorter than the sum of square of the rest
+        if (num1 == num2 && num2 == num3) {             //overlap if three values are same                  
+            printf("정삼각형\n");           
+        }
+        else {                              
+            printf("예각삼각형\n");              //else three values are not
+        }
+    }
+    else if (num3 * num3 + num2 * num2 == num1 * num1) {    //else if square of the biggest value is same with the sum of square of the rest 
+        printf("직각삼각형\n");
+    }
+    else if (num3 * num3 + num2 * num2 < num1 * num1) {     //else if square of the biggest value is bigger than the sum of square of the rest 
+        if (num1 > num2 + num3) {               //if the biggest value is bigger than the sum of the rest
+            printf("삼각형이 아닙니다.\n");
+        }
+        else {          //else biggest value is smaller than the sum of the rest
+            printf("예각삼각형\n");
+        }
+    }
+}
