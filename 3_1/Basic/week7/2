@@ -1,0 +1,63 @@
+#include <stdio.h>		//bring header file
+#define N 9		//make a constant number N
+
+int main(void) {		//start main
+
+	int i, j;			//set variable i, j
+	int M = N / 2;		//set variable M to make a mini half symbol
+
+	for (i = 0; i < N; i++) {		//start for loop to make top triangle
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step reduce blanks one by one
+			printf(" ");			//blank space
+		}
+		for (j = 0; j < 2 * i + 1; j++) {		//overlap for loop to make star symbol. each step increase star symbol by two until 2*i+1
+			printf("*");			//star symbol
+		}		
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step reduce blanks one by one
+			printf(" ");			//blank space
+		}
+		puts("");		//when each tier ends, make a line 
+	}
+	for (i = N - 1; i >= 0; i--) {		//start for loop to make below overturned triangle
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step increase blanks one by one
+			printf(" ");		//blank space
+		}
+		for (j = 0; j < 2 * i + 1; j++) {		//overlap for loop to make star symbol. each step reduce star symbol by two until 2*i+1
+			printf("*");		//star symbol
+		}
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step increase blanks one by one
+			printf(" ");		//blank space
+		}
+		puts("");		//when each tier ends, make a line 				
+	}
+
+	puts("");			//make a line to sortate each shape
+	puts("");
+
+	for (i = 0; i < M; i++) {		//start for loop to make top triangle
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step reduce blanks one by one
+			printf(" ");		//blank space
+		}	
+		for (j = 0; j < 2 * i + 1; j++) {	//overlap for loop to make star symbol. each step increase star symbol by two until 2*i+1
+			printf("*");		//star symbol
+		}
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step reduce blanks one by one
+			printf(" ");		//blank space
+		}
+		puts("");		//when each tier ends, make a line 
+	}
+	for (i = M; i >= 0; i--) {		//start for loop to make below overturned triangle
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step increase blanks one by one
+			printf(" ");		//blank space
+		}
+		for (j = 0; j < 2 * i + 1; j++) {		//overlap for loop to make star symbol. each step reduce star symbol by two until 2*i+1
+			printf("*");		//star symbol
+		}
+		for (j = 0; j < N - i; j++) {		//overlap for loop to make front blank space. each step increase blanks one by one
+			printf(" ");		//blank space
+		}
+		puts("");		//when each tier ends, make a line 
+	}
+	
+	return 0;
+}
