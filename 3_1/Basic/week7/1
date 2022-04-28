@@ -9,5 +9,5 @@ int main(void) {				//star main
 		puts("");		//when one tier ends, make a line for next tier
 	}
   
-	return 0;
+	return 0;		//return 0 to notify process has end successfuly
 }
