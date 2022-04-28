@@ -59,5 +59,5 @@ int main(void) {		//start main
 		puts("");		//when each tier ends, make a line 
 	}
 	
-	return 0;
+	return 0;		//return 0 to notify process has end successfuly
 }
