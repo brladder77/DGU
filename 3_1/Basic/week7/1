@@ -1,0 +1,13 @@
+#include <stdio.h>				//bring headerfile
+
+int main(void) {				//star main
+
+	for (int i = 2; i < 10; i++) {			//start for loop from 2 to 9
+		for (int j = 1; j < 10; j++) {		//overlap for loop from 1 to 9
+			printf("%d x %d = %d  ", i, j, i*j);		//output multiplication table each tier
+		}
+		puts("");		//when one tier ends, make a line for next tier
+	}
+  
+	return 0;
+}
