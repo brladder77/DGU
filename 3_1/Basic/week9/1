@@ -3,7 +3,6 @@
 #define NUM2 3          //make a constant number NUM2. it will be A column
 #define NUM3 3          //make a constant number NUM3. it will be B row
 #define NUM4 3          //make a constant number NUM4. it will be B column
-//[NUM1][NUM2], [NUM3][NUM4] 행렬의 곱은 NUM2==NUM3 여야하고 결과는 [NUM1][NUM4]형태
 
 void mul(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM4]);          //function head of multiply
 void sub(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]);          //function head of subtraction
