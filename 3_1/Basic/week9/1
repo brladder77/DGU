@@ -1,0 +1,134 @@
+#include <stdio.h>      //bring header file
+#define NUM1 2          //make a constant number NUM1. it will be A row
+#define NUM2 3          //make a constant number NUM2. it will be A column
+#define NUM3 3          //make a constant number NUM3. it will be B row
+#define NUM4 3          //make a constant number NUM4. it will be B column
+//[NUM1][NUM2], [NUM3][NUM4] 행렬의 곱은 NUM2==NUM3 여야하고 결과는 [NUM1][NUM4]형태
+
+void mul(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM4]) {         //make function for two-dimensional array multiply, take 3 two-dimensional array for parameter
+    int temp;       //set variable temp for save multiply result
+    if (NUM2 == NUM3) {         //for multiply, NUM2 have to have same value as NUM3
+        for (int i = 0; i < NUM1; i++) {        //loop i to change array A row
+            for (int j = 0; j < NUM4; j++) {    //loop j to change array B column
+                temp = 0;                       //initialize temp at each loop ends
+                for (int k = 0; k < NUM2; k++) {        //set k to A column and B row then loop. they must to be change samely for multiply
+                    temp += (A[i][k] * B[k][j]);        //save multiplied value to temp
+                }
+                C[i][j] = temp;                         //move temp value to array C.
+            }
+        }
+        printf("    행렬 A\n");
+        for (int i = 0; i < NUM1; i++) {        //loop i to change array A row
+            for (int j = 0; j < NUM2; j++) {    //loop j to change array A column
+                printf("%3d ", A[i][j]);        //show each value of array A, and set 3 space
+            }
+            puts("");                           //when each row ends, make a line
+        }   
+        printf("    행렬 B\n");
+        for (int i = 0; i < NUM3; i++) {        //loop i to change array B row
+            for (int j = 0; j < NUM4; j++) {    //loop j to change array B column
+                printf("%3d ", B[i][j]);        //show each value of array B, and set 3 space
+            }
+            puts("");                           //when each row ends, make a line
+        }
+        printf("--------- 곱셈결과 C ---------\n");
+        printf("    행렬 C\n");
+        for (int i = 0; i < NUM1; i++) {        //loop i to change array C row, When multiplied A row will be C row
+            for (int j = 0; j < NUM4; j++) {    //loop j to change array C column, When multiplied B column will be C column
+                printf("%3d ", C[i][j]);        //show each value of array C, and set 3 space
+            }
+            puts("");                           //when each row ends, make a line
+        }
+    }
+    else {              //if NUM2 does not same as NUM3 we can't multiply
+        printf("곱셈이 불가능합니다.\n");    //show users that we can't multiply it
+    }
+}
+
+void sum(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {    //make function for two-dimensional array sum, take 3 two-dimensional array for parameter
+    int temp = 0;       //set variable temp for save sum result
+    if ((NUM1 == NUM3) && (NUM2 == NUM4)) {         //for sum, NUM1 have to have same value as NUM3 and NUM2 have to have same value as NUM4
+        for (int i = 0; i < NUM1; i++) {            //loop i to change array A, B row
+            for (int j = 0; j < NUM2; j++) {        //loop j to change array A, B column
+                temp += (A[i][j] + B[i][j]);        //save value of sum to temp
+                C[i][j] = temp;                     //move temp value to array C.
+            }
+        }
+        printf("    행렬 A\n");
+        for (int i = 0; i < NUM1; i++) {                  //loop i to change array A row
+            for (int j = 0; j < NUM2; j++) {              //loop j to change array A column
+                printf("%3d ", A[i][j]);                  //show each value of array A, and set 3 space
+            }
+            puts("");                                     //when each row ends, make a line
+        }
+        printf("    행렬 B\n");
+        for (int i = 0; i < NUM1; i++) {                  //loop i to change array B row
+            for (int j = 0; j < NUM2; j++) {              //loop j to change array B column
+                printf("%3d ", B[i][j]);                  //show each value of array B, and set 3 space
+            }
+            puts("");                                     //when each row ends, make a line
+        }
+        printf("--------- 덧셈결과 C ---------\n");
+        printf("    행렬 C\n");
+        for (int i = 0; i < NUM1; i++) {                  //loop i to change array C row
+            for (int j = 0; j < NUM2; j++) {              //loop j to change array C column
+                printf("%3d ", C[i][j]);                  //show each value of array C, and set 3 space
+            }
+            puts("");                                     //when each row ends, make a line
+        }
+    }
+    else {                                              //if row and column of array A and B does not same we can't sum 
+        printf("덧셈이 불가능합니다.\n");                //show users that we can't sum it
+    }
+}
+
+void sub(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {        //make function for two-dimensional array subtraction, take 3 two-dimensional array for parameter
+    int temp = 0;                                                            //set variable temp for save subtraction result
+    if ((NUM1 == NUM3) && (NUM2 == NUM4)) {                                  //for subtraction, NUM1 have to have same value as NUM3 and NUM2 have to have same value as NUM4
+        for (int i = 0; i < NUM1; i++) {                                     //loop i to change array A, B row
+            for (int j = 0; j < NUM2; j++) {                                 //loop j to change array A, B column
+                temp += (A[i][j] - B[i][j]);                                 //save value of subtraction to temp
+                C[i][j] = temp;                                              //move temp value to array C.
+            }
+        }
+        printf("    행렬 A\n");                       
+        for (int i = 0; i < NUM1; i++) {              //loop i to change array A row
+            for (int j = 0; j < NUM2; j++) {          //loop j to change array A column
+                printf("%3d ", A[i][j]);              //show each value of array A, and set 3 space
+            }
+            puts("");                                 //when each row ends, make a line
+        }
+        printf("    행렬 B\n");
+        for (int i = 0; i < NUM1; i++) {              //loop i to change array B row
+            for (int j = 0; j < NUM2; j++) {          //loop j to change array B column
+                printf("%3d ", B[i][j]);              //show each value of array B, and set 3 space
+            }
+            puts("");                                 //when each row ends, make a line
+        }
+        printf("--------- 뺄셈결과 C ---------\n"); 
+            printf("    행렬 C\n");
+        for (int i = 0; i < NUM1; i++) {              //loop i to change array C row
+            for (int j = 0; j < NUM2; j++) {          //loop j to change array C column
+                printf("%3d ", C[i][j]);              //show each value of array C, and set 3 space
+            }
+            puts("");                                 //when each row ends, make a line
+        }
+    }   
+    else {                                          //if row and column of array A and B does not same we can't subtraction
+        printf("뺄셈이 불가능합니다.\n");            //show users that we can't subtract it
+    }
+}
+
+
+int main(void) {                                        //start main
+    int A[NUM1][NUM2] = { 1,2,3,4,5,6 };                //set array A
+    int B[NUM3][NUM4] = { 1,2,3,4,5,6,7,8,9 };          //set array B
+    int C[NUM1][NUM4];                                  //set array C for result
+    sum(A, B, C);                                       //sum A B and show result C
+    puts("");                                           //make a line
+    puts("");
+    sub(A, B, C);                                       //subtract A B and show result C
+    puts("");
+    puts("");
+    mul(A, B, C);                                       //multiply A B and show result C
+}
