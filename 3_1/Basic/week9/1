@@ -5,7 +5,24 @@
 #define NUM4 3          //make a constant number NUM4. it will be B column
 //[NUM1][NUM2], [NUM3][NUM4] 행렬의 곱은 NUM2==NUM3 여야하고 결과는 [NUM1][NUM4]형태
 
-void mul(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM4]) {         //make function for two-dimensional array multiply, take 3 two-dimensional array for parameter
+void mul(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM4]);          //function head of multiply
+void sub(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]);          //function head of subtraction
+void sum(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]);          //function head of sum
+
+int main(void) {                                        //start main
+    int A[NUM1][NUM2] = { 1,2,3,4,5,6 };                //set array A
+    int B[NUM3][NUM4] = { 1,2,3,4,5,6,7,8,9 };          //set array B
+    int C[NUM1][NUM4];                                  //set array C for result
+    sum(A, B, C);                                       //sum A B and show result C by calling function sum
+    puts("");                                           //make a line
+    puts("");
+    sub(A, B, C);                                       //subtract A B and show result C by calling function sub
+    puts("");
+    puts("");
+    mul(A, B, C);                                       //multiply A B and show result C by calling function mul
+}
+
+void mul(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM4]) {         //make function named mul for two-dimensional array multiply, take 3 two-dimensional array for parameter
     int temp;       //set variable temp for save multiply result
     if (NUM2 == NUM3) {         //for multiply, NUM2 have to have same value as NUM3
         for (int i = 0; i < NUM1; i++) {        //loop i to change array A row
@@ -45,7 +62,7 @@ void mul(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM4]) {         //ma
     }
 }
 
-void sum(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {    //make function for two-dimensional array sum, take 3 two-dimensional array for parameter
+void sum(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {    //make function named sum for two-dimensional array sum, take 3 two-dimensional array for parameter
     int temp = 0;       //set variable temp for save sum result
     if ((NUM1 == NUM3) && (NUM2 == NUM4)) {         //for sum, NUM1 have to have same value as NUM3 and NUM2 have to have same value as NUM4
         for (int i = 0; i < NUM1; i++) {            //loop i to change array A, B row
@@ -82,7 +99,7 @@ void sum(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {    //make fu
     }
 }
 
-void sub(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {        //make function for two-dimensional array subtraction, take 3 two-dimensional array for parameter
+void sub(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {        //make function named sub for two-dimensional array subtraction, take 3 two-dimensional array for parameter
     int temp = 0;                                                            //set variable temp for save subtraction result
     if ((NUM1 == NUM3) && (NUM2 == NUM4)) {                                  //for subtraction, NUM1 have to have same value as NUM3 and NUM2 have to have same value as NUM4
         for (int i = 0; i < NUM1; i++) {                                     //loop i to change array A, B row
@@ -117,18 +134,4 @@ void sub(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {        //mak
     else {                                          //if row and column of array A and B does not same we can't subtraction
         printf("뺄셈이 불가능합니다.\n");            //show users that we can't subtract it
     }
-}
-
-
-int main(void) {                                        //start main
-    int A[NUM1][NUM2] = { 1,2,3,4,5,6 };                //set array A
-    int B[NUM3][NUM4] = { 1,2,3,4,5,6,7,8,9 };          //set array B
-    int C[NUM1][NUM4];                                  //set array C for result
-    sum(A, B, C);                                       //sum A B and show result C
-    puts("");                                           //make a line
-    puts("");
-    sub(A, B, C);                                       //subtract A B and show result C
-    puts("");
-    puts("");
-    mul(A, B, C);                                       //multiply A B and show result C
 }
