@@ -1,7 +1,7 @@
 #include <stdio.h>      //bring header file
 #define NUM1 2          //make a constant number NUM1. it will be A row
 #define NUM2 3          //make a constant number NUM2. it will be A column
-#define NUM3 3          //make a constant number NUM3. it will be B row
+#define NUM3 2          //make a constant number NUM3. it will be B row
 #define NUM4 3          //make a constant number NUM4. it will be B column
 
 void mul(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM4]);          //function head of multiply
@@ -10,7 +10,7 @@ void sum(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]);          //fu
 
 int main(void) {                                        //start main
     int A[NUM1][NUM2] = { 1,2,3,4,5,6 };                //set array A
-    int B[NUM3][NUM4] = { 1,2,3,4,5,6,7,8,9 };          //set array B
+    int B[NUM3][NUM4] = { 1,2,3,6,7,8 };          //set array B
     int C[NUM1][NUM4];                                  //set array C for result
     sum(A, B, C);                                       //sum A B and show result C by calling function sum
     puts("");                                           //make a line
@@ -66,6 +66,7 @@ void sum(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {    //make fu
     if ((NUM1 == NUM3) && (NUM2 == NUM4)) {         //for sum, NUM1 have to have same value as NUM3 and NUM2 have to have same value as NUM4
         for (int i = 0; i < NUM1; i++) {            //loop i to change array A, B row
             for (int j = 0; j < NUM2; j++) {        //loop j to change array A, B column
+                temp = 0;                           //initialize temp at each sum
                 temp += (A[i][j] + B[i][j]);        //save value of sum to temp
                 C[i][j] = temp;                     //move temp value to array C.
             }
@@ -103,6 +104,7 @@ void sub(int A[NUM1][NUM2], int B[NUM3][NUM4], int C[NUM1][NUM2]) {        //mak
     if ((NUM1 == NUM3) && (NUM2 == NUM4)) {                                  //for subtraction, NUM1 have to have same value as NUM3 and NUM2 have to have same value as NUM4
         for (int i = 0; i < NUM1; i++) {                                     //loop i to change array A, B row
             for (int j = 0; j < NUM2; j++) {                                 //loop j to change array A, B column
+                temp = 0;                                                    //initialize temp at each sum
                 temp += (A[i][j] - B[i][j]);                                 //save value of subtraction to temp
                 C[i][j] = temp;                                              //move temp value to array C.
             }
