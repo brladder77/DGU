@@ -1,0 +1,37 @@
+#include <stdio.h>      //bring header file
+
+void exc(int* pa, int* pb, int sa, int sb) {        //make function named exc for exchange element in two array A, B
+                                                    //each pa, pb means the first element address of A, B. and sa, sb are the number of elements
+
+    if (sa == sb) {                                 //if number of elements are equal
+        for (int i = 0; i < sa; i++) {              //start loop from index 0 to last element number
+            int c = *(pa + i);                      //save the value in address (pa+i) to variable c
+            *(pa + i) = *(pb + i);                  //save the value in address (pb+i) to (pa+i)
+            *(pb + i) = c;                          //sabe the value in c to (pb+i)
+        }
+        for (int i = 0; i < sa; i++) {
+            printf("%3d ", *(pa + i));              //show array A
+        }
+        puts("");
+
+        for (int i = 0; i < sa; i++) {
+            printf("%3d ", *(pb + i));              //show array B
+        }
+    }
+
+    else {                                          //else. if the number of elements aren't equal
+        printf("배열의 크기가 다릅니다.\n");
+    }
+}
+
+int main(void) {                                    //start main
+    int A[] = { 1,2,3,4,5 };                        //set array A
+    int B[] = { 10,11,12,44,5,6 };                    //set array B
+    int* pa = &A[0];                                //save the first element address of array A in pa
+    int* pb = &B[0];                                //save the first element address of array B in pb
+    int sa = sizeof(A) / sizeof(*pa);               //divide full size of array A in size of each element to get number of elements of A
+    int sb = sizeof(B) / sizeof(*pb);               //divide full size of array B in size of each element to get number of elements of B
+    exc(A, B, sa, sb);                              //call function
+
+    return 0;                                       //return 0 to notify that process has end successfuly
+}
