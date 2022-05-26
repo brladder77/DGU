@@ -1,0 +1,50 @@
+#include <stdio.h>                                          //bring header file
+#include <time.h>                                           //bring header file for random function
+
+int** lotnum(int A[1000][7]) {                              //make function named lotnum to give 7 random number to each 1000 person. use two-dimensional array as parameter              
+    srand(time(NULL));                                      //put time value in seed
+    for (int i = 0; i < 1000; i++) {                        //loop i to make 1000 people
+        for (int j = 0; j < 7; j++) {                       //loop j to give 7 numbers
+            A[i][j] = (rand() % 70 + 1);                    //give number between 0 to 69 and +1 to make 1 to 70
+            for (int k = 0; k < j; k++) {                   //loop k to compare one persons previous numbers to prevent duplication
+                if (A[i][j] == A[i][k]) {                   //if the number generated now overlaps with the previous numbers
+                    while (A[i][j] != A[i][k]) {            //we will generate new number infinitely untill it doesn't overlaps with previos numbers
+                        A[i][j] = (rand() % 70 + 1);
+                    }
+                }
+            }
+        }
+    }
+    return A;                                               //return two-dimensional's start address
+}
+
+void win(int A[1000][7]) {                                  //make function named win to choose winner between 0 to 999. use two-dimensional array as parameter 
+    int winner = rand() % 1000;                             //choose winner between 1000 people
+    int B[1000];                                            //make one-dimensional array B to save each person's overlaps number with winner
+    for (int i = 0; i < 1000; i++) {                        //loop i to view 1000 people
+        int count = 0;                                      //set variable count and initialize to 0 at every new person start
+        for (int j = 0; j < 7; j++) {                       //loop j to view 7 numbers of each person
+            if (A[winner][j] == A[i][j]) {                  //if winner's number are same with the i person 
+                count++;                                    //increment count
+            }
+           //printf("%d    ", A[i][j]);                     //if we want to view each person's 7 numbers, we can use it
+        }
+        //puts("");                                         //when viewing each person's numbers, move to next line when each person ends
+        B[i] = count;                                       //save the i persons overlaps count at B array
+    }
+    printf("당첨자는 %3d번 입니다.\n", winner + 1);         //show the winner number and increase 1. to make number between 1 to 1000 
+    for (int i = 0; i < 1000; i++) {                        //loop i to show 1000 people
+        printf("%3d번은 %d개 일치\n", i + 1, B[i]);         //show each i person's overlaps count
+    }
+}
+
+int main(void) {                                            //start main
+    int A[1000][7];                                         //set two-dimensional array A
+    for (int i = 0; i < 1000; i++) {                        //initialize A
+        for (int j = 0; j < 7; j++) {
+            A[i][j] = 0;
+        }
+    }
+    win(lotnum(A));                                         //use function lotnum to make each 1000 person's 7 lotto numbers and save it into array A
+                                                            //then put A in function win to choose winner and save number of winning numbers for each person
+}
