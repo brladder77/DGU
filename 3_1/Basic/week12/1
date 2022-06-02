@@ -1,0 +1,143 @@
+#include <stdio.h>                                                                      //brinf header file
+#include <string.h>                                                                     //bring header file for strcmp
+
+struct Student {                                                                        //make structure that contain name, student number, major, age, address
+    char name[20];
+    char st_num[20];
+    char major[20];
+    char age[20];
+    char address[20];
+};
+
+void stu_input(struct Student*, int Arr[1000]);                                         //function head of stu_input 
+void stu_search(struct Student*);                                                       //function head of stu_search
+void stu_delete(struct Student*, int Arr[1000]);                                        //function head of stu_delete
+
+int main(void) {                                                                        //star main
+    int con = 1;                                                                        //set variable con to control while loop
+    int Arr[1000] = { 0 };                                                              //initialize array Arr to check the empty space
+
+    struct Student std[1000] = { 0 };                                                   //initialize std that made by 1000 Student structure
+
+    while (con == 1) {                                                                  //start while loop                                        
+
+        puts("1. 학생 등록   2. 학생 검색   3. 학생 삭제   0.종료");                    //show choices to users                          
+        printf("원하시는 번호를 눌러주세요 : ");
+        int num1 = 0;                                                                   //set variable num1 to input user choice
+        scanf_s("%d", &num1);                                                           //input user choice
+            
+        switch (num1) {                                                                 
+
+        case 0:                                                                         //when user choose 0, stop while loop by make con to 0
+            puts("");
+            con = 0;
+            puts("");
+            break;
+
+        case 1:                                                                         //when user choose 1, call function stu_input 
+            puts("");
+            stu_input(std, Arr);
+            puts("");
+            break;
+
+        case 2:                                                                         //when user choose 2, call function stu_search
+            puts("");
+            stu_search(std);
+            puts("");
+            break;
+
+        case 3:                                                                         //when user choose 1, call function stu_search
+            puts("");
+            stu_delete(std, Arr);
+            puts("");
+            break;
+
+        default:                                                                        //when user choose wrong number, go back to start point
+            puts("숫자를 다시 입력해주세요.");
+            puts("");
+            break;
+        }
+    }
+    return 0;                                                                           //return 0 to main
+}
+
+void stu_input(struct Student* std, int Arr[1000]) {                                    //make function named stu_input to register student, take std structure and array Arr for parameters
+                                                                    
+    for (int k = 0; k < 1000; k++) {                                                    //start 0 to 999, if there are any empty space, put informations of student that user inputs
+        if (Arr[k] == 0) {                                                              //we will chaeck array Arr for finding empty space. if Arr[k] is 0, it means std[k] is empty either
+            printf("등록하려는 학생의 이름을 입력하세요 : ");
+            scanf_s("%s", (std + k)->name, 20);
+            printf("학번을 입력하세요 : ");
+            scanf_s("%s", (std + k)->st_num, 20);
+            printf("전공을 입력하세요 : ");
+            scanf_s("%s", (std + k)->major, 20);
+            printf("나이를 입력하세요 : ");
+            scanf_s("%s", (std + k)->age, 20);
+            printf("주소을 입력하세요 : ");
+            scanf_s("%s", (std + k)->address, 20);
+            Arr[k] = 1;                                                                 //change Arr[k] to 1 to show std[k] is not empty
+            puts("등록되었습니다.");
+            return;                                                                     //end function
+        }
+    }
+
+    printf("입력 가능한 학생 수가 초과되었습니다.\n");                                  //if there are no empty space, notice to user that std is full
+    return;                                                                             //end function
+}
+
+
+void stu_search(struct Student* std) {                                                  //make function named stu_search to search student, take std structure for parameters
+    
+    int k = 0;                                                                          //set variable k to 0
+    char str[20];                                                                       //make array str to input student name
+    printf("찾으시는 학생의 이름을 입력하세요 : ");
+    scanf_s("%s", str, 20);                                                             //input student name that user's searching
+
+    for (int j = 0; j < 1000; j++) {                                                    //search every space of std to find student who have same name with input name
+        if (strcmp((std + j)->name, str) == 0) {                                        //use strcmp to compare name
+            printf("이름 : %s\n", (std + j)->name);                                     //if we find student, output every informations of student
+            printf("학번 : %s\n", (std + j)->st_num);
+            printf("학과 : %s\n", (std + j)->major);
+            printf("나이 : %s\n", (std + j)->age);
+            printf("주소 : %s\n", (std + j)->address);
+            puts("");
+            k = 1;                                                                      //change k to 1 so we can show that we have found the student
+        }
+    }
+
+    if (k == 0) {                                                                       //if k doesn't change, it means there are no student that user are looking for
+        printf("찾으시는 학생이 존재하지 않습니다.\n");
+        return;                                                                         //end function
+    }
+    return;                                                                             //end function
+}
+
+void stu_delete(struct Student* std, int Arr[1000]) {                                           //make function named stu_delete to delete student, take std structure and array Arr for parameters
+
+    char st_num1[20];                                                                           //make array st_num to input student number
+    char str1[20];                                                                              //make array str to input student name
+    int t = 0;                                                                                  //set variable t to 0
+    printf("삭제하려는 학생의 이름을 입력하세요 : ");                                           //request user to input student name that user want to delete
+    scanf_s("%s", str1, 20);                                                                    //input student name that user want to delete
+    printf("학번을 입력하세요 : ");                                                             //request user to input student number that user want to delete
+    scanf_s("%s", st_num1, 20);                                                                 //input student number that user want to delete
+
+    for (int j = 0; j < 1000; j++) {                                                           
+        if (!((strcmp(str1, (std + j)->name) || (strcmp(st_num1, (std + j)->st_num))))) {       //search every space of std and check student name and number who are same with input
+            *(std + j)->name = NULL;                                                            //if we find student, clear every information
+            *(std + j)->st_num = NULL;                                                          
+            *(std + j)->major = NULL;
+            *(std + j)->age = NULL;
+            *(std + j)->address = NULL;
+            t = 1;                                                                              //change t to 1 so we can show that we have found the student
+            Arr[j] = 0;                                                                         //change Arr[k] to 0 to show std[k] is now empty
+            puts("삭제되었습니다.");
+            return;                                                                             //end function
+        }
+    }
+
+    if (t == 0) {                                                                               //if t doesn't change, it means there are no student that user are looking for   
+        puts("삭제하려는 학생이 존재하지 않습니다.");
+        return;                                                                                 //end function
+    }
+}
