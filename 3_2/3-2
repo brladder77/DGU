@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+void com_mul(int a, int b);
+void com_fac(int a, int b);
+
+int main() {
+    com_mul(123, 456);
+    com_fac(6666, 9999);
+}
+
+void com_fac(int a, int b) {
+    int count = 0;
+    for (int i = 2; i <= (a < b ? a : b); i++) {
+        if (a % i == 0 && b % i == 0) {
+            count++;
+        }
+    }
+    printf("공약수의 개수는 %d개입니다.\n", count);
+}
+
+void com_mul(int a, int b) {
+    int count = 0;
+    for (int i = (a < b ? b : a); i <= 1000000; i++) {
+        if (i % a == 0 && i % b == 0) {
+            count++;
+        }
+    }
+    printf("공배수는 %d개입니다.\n", count);
+
+}
