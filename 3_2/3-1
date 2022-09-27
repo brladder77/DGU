@@ -11,6 +11,7 @@ int main() {
 void func(int a, int b) {
     if (a > 10000 || a < 1 || b>10000 || b < 1) {
         puts("1부터 10000 사이의 수를 입력해주세요.");
+        return 0;
     }
     for (int i = 10; i <= 100000; i = i * 10) {
         if (i < b * 10) {
