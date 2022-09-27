@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+void func(int a, int b);
+
+int main() {
+    func(3333, 1234);
+
+    return 0;
+}
+
+void func(int a, int b) {
+    if (a > 10000 || a < 1 || b>10000 || b < 1) {
+        puts("1부터 10000 사이의 수를 입력해주세요.");
+    }
+    for (int i = 10; i <= 100000; i = i * 10) {
+        if (i < b * 10) {
+            int c = ((b % i) - (b % (i / 10))) / (i / 10) * a;
+            printf("%d\n", c);
+        }
+        else {
+            printf("%d\n", a * b);
+            break;
+        }
+    }
+}
