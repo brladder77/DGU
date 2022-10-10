@@ -1,0 +1,39 @@
+
+#include <stdio.h>
+
+void SelectionSort(int A[], int n);
+void swap(int* A, int i, int min);
+
+int main() {
+	int A[8] = { 30,20,40,10,5,10,30,15 };
+	puts("Array A");
+	for (int t = 0; t < 8; t++)
+		printf("%d ", A[t]);
+	puts("\n");
+	SelectionSort(A, 8);
+}
+
+void SelectionSort(int A[], int n) {
+	int i, j, min;
+	for (i = 0; i < n-1; i++) {
+		min = i;
+		for (j = min + 1; j < n; j++) {
+			if (A[min] > A[j])
+				min = j;
+		}
+		if (min != i) {
+			swap(A, i, min);
+			printf("step %d\n", i+1);
+			for (int t = 0; t < n; t++)
+				printf("%d ", A[t]);
+			puts("\n");
+		}
+	}
+}
+
+void swap(int* pa, int i, int min) {
+	int a = *(pa + i);
+	int b = *(pa + min);
+	*(pa + i) = b;
+	*(pa + min) = a;
+}
