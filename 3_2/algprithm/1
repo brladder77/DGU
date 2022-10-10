@@ -1,0 +1,43 @@
+#include <stdio.h>
+#define num 10
+//selection sort(not recursive)
+
+void BubbleSort(int* A);
+void interchange(int* A, int i, int j);
+
+int main() {
+	int A[num];
+	printf("정렬하고자 하는 숫자들을 차례로 입력하세요(%d개)\n", num);
+	for (int i = 0; i < num; i++) {
+		scanf_s("%d ", A + i);
+		printf("%d", i);
+	}
+	//왜 11개가 입력되는거지?
+	BubbleSort(A);
+	for (int i = 0; i < num; i++) {
+		printf("%d ", A[i]);
+	}
+}
+
+void BubbleSort(int* A) {
+	for (int j = num-1; j >=0; j--) {
+		int sm = 0;
+		int sorted = 0;
+		for (int k = 1; k < j+1; k++) {
+			if (*(A + sm) > * (A + k)) {
+				interchange(A, sm, k);
+				sorted = 1;
+			}
+			if (sorted == 0) {
+				break;
+			}
+			sm = k;
+		}
+	}
+}
+
+void interchange(int* A, int i, int j) {
+	int value = *(A + i);
+	*(A + i) = *(A + j);
+	*(A + j) = value;
+}
