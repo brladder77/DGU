@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+void Merge(int A[], int B[], int left, int mid, int right);
+void MergeSort(int A[], int B[], int left, int right);
+
+
+int main()
+{
+    int A[10] = { 30, 20, 40, 35, 5, 50, 45, 10, 25, 15 };
+    int B[10] = { 0,0,0,0,0,0,0,0,0,0 };
+    printf("초기 : ");
+    for (int c = 0; c < 10; c++)
+        printf("%d ", A[c]);
+    puts("\n");
+
+    MergeSort(A, B, 0, 10 - 1);
+
+    printf("result : ");											
+    for (int t = 0; t < 10; t++)
+        printf("%d ", A[t]);
+    puts("\n");
+
+    return 0;
+}
+
+void Merge(int A[], int B[], int left, int mid, int right)
+{
+    int LP, RP, BP, i;
+    LP = left;
+    RP = mid + 1;
+    BP = left;
+    while (BP <= right) {
+        if (RP > right)
+            B[BP++] = A[LP++];
+        else if (LP > mid)
+            B[BP++] = A[RP++];
+        else if (A[LP] <= A[RP]){
+            B[BP++] = A[LP++];
+            printf("swap : ");											
+            for (int t = 0; t < 10; t++)
+                printf("%d ", B[t]);
+            puts("\n");
+        }
+        else if (A[LP] >= A[RP]) {
+            B[BP++] = A[RP++];
+            printf("swap : ");											
+            for (int t = 0; t < 10; t++)
+                printf("%d ", B[t]);
+            puts("\n");
+        }
+
+    }
+    for (i = left; i <= right; i++)
+        A[i] = B[i];
+}
+
+void MergeSort(int A[],int B[], int left, int right)
+{
+    int mid;
+
+    if (left < right) {
+        mid = (left + right) / 2;
+        MergeSort(A, B,left, mid);
+        MergeSort(A,B, mid + 1, right);
+
+        Merge(A, B, left, mid, right);
+    }
+}
