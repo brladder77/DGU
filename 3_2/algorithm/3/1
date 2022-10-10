@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+void QuickSort(int A[], int L, int R);
+void swap(int* A, int i, int min);
+
+
+int main() {
+	srand(time(NULL));
+	int A[10];
+	for (int i = 0; i < 10; i++) {								//make Array A with rand function
+		A[i] = ((rand() % 10000)*10+rand()%10+1);								//elements between 1 to 100000
+	}
+	printf("초기 : ");
+	for (int i = 0; i < 10; i++) {
+		printf("%d ", A[i]);
+	}
+	puts("\n");
+	QuickSort(A, 0,9);										//put A in function SelectionSort
+	printf("result : ");											//check the first state of A
+	for (int t = 0; t < 10; t++)
+		printf("%d ", A[t]);
+	puts("\n");
+
+	return 0;
+}
+
+void QuickSort(int A[], int L, int R) {
+	int left= L, right = R;
+	int value = A[L];			//set value
+	int temp;
+	do
+	{
+		while(A[left] > value)		//while find bigger one
+			left++;
+		while(A[right] < value)		//while find smaller one
+			right--;
+		if(left <= right){			//if left and right doesn't met
+			swap(A, left, right);
+			printf("swap 발생 : ");											
+			for (int t = 0; t < 10; t++)
+				printf("%d ", A[t]);
+			puts("\n");
+			left++;
+			right--;
+		}
+	}
+	while(left <= right);		
+
+	if(L < right)
+		QuickSort(A, L, right);				//recursive
+
+	if(left < R)
+		QuickSort(A, left, R);
+}
+
+void swap(int* pa, int i, int min) {
+	int a = *(pa + i);
+	int b = *(pa + min);
+	*(pa + i) = b;
+	*(pa + min) = a;
+}
