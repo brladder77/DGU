@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+void QuickSort(int A[], int L, int R);
+void swap(int* A, int i, int min);
+
+
+int main() {
+	srand(time(NULL));
+	int A[10];
+	for (int i = 0; i < 10; i++) {								//make Array A with rand function
+		A[i] = ((rand() % 10000) * 10 + rand() % 10 + 1);								//elements between 1 to 100000
+	}
+	printf("초기 : ");
+	for (int i = 0; i < 10; i++) {
+		printf("%d ", A[i]);
+	}
+	puts("\n");
+	QuickSort(A, 0, 9);										//put A in function SelectionSort
+	printf("result : ");											//check the first state of A
+	for (int t = 0; t < 10; t++)
+		printf("%d ", A[t]);
+	puts("\n");
+
+	return 0;
+}
+
+void QuickSort(int A[], int L, int R) {
+	int left = L, right = R;
+	int value = A[L];			//value 설정 (가운데) 
+	int temp;
+	do
+	{
+		while (A[left] < value)		//left가 value보다 큰 값을 만나거나 value을 만날 때까지 
+			left++;
+		while (A[right] > value)		//right가 value보다 작은 값을 만나거나 value을 만날 때까지 
+			right--;
+		if (left <= right) {			//left가 right보다 왼쪽에 있다면 교환 
+			swap(A, left, right);
+			printf("swap 발생 : ");
+			for (int t = 0; t < 10; t++)
+				printf("%d ", A[t]);
+			puts("\n");
+			left++;
+			right--;
+		}
+	} while (left <= right);		//left가 right 보다 오른쪽에 있을 때까지 반복 
+
+	if (L < right)
+		QuickSort(A, L, right);				//왼쪽 배열 재귀적으로 반복 
+
+	if (left < R)
+		QuickSort(A, left, R);		//오른쪽 배열 재귀적으로 반복 
+}
+
+void swap(int* pa, int i, int min) {
+	int a = *(pa + i);
+	int b = *(pa + min);
+	*(pa + i) = b;
+	*(pa + min) = a;
+}
