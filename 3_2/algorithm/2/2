@@ -1,0 +1,46 @@
+
+#include <stdio.h>
+
+void BubbleSort(int *pa, int i, int k);
+void swap(int* pa, int i);
+
+int main() {
+	int A[8] = { 30,20,40,10,5,10,30,15 };
+	int i = 0, k = 1;
+	puts("Array A");
+	for (int j = 0; j < 8; j++) {
+		printf("%d ", A[j]);
+	}
+	puts("\n");
+	BubbleSort(A, i, k);
+}
+
+void BubbleSort(int* pa, int i, int k) {
+	if (k > 7)
+		return;
+
+	if (*(pa + i) > *(pa + i + 1)) {
+		swap(pa, i);
+		printf("step %d_%d\n", k, i + 1);
+		for (int j = 0; j < 8; j++) {
+			printf("%d ", *(pa + j));
+		}
+		puts("\n");
+	}
+	
+	i++;
+
+	if (i > 7-k) {
+		k++;
+		i = 0;
+	}
+
+	BubbleSort(pa, i, k);
+}
+
+void swap(int* pa, int i) {
+	int a = *(pa + i);
+	int b = *(pa + i + 1);
+	*(pa + i) = b;
+	*(pa + i + 1) = a;
+}
