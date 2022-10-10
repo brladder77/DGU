@@ -1,0 +1,37 @@
+
+//1번 선택정렬로 잘못 적으심 버블로 해도됨
+//코드 압축해서 넣어주세여
+
+#include <stdio.h>
+
+void SelectionSort(int A[], int n);
+void swap(int *A, int i, int min);
+
+int main() {
+	int A[8] = { 30,20,40,10,5,10,30,15 };
+	SelectionSort(A, 8);
+
+}
+
+void SelectionSort(int A[], int n) {
+	int i, j, min;
+	for (i = 0; i < n - 1; i++) {
+		min = 1;
+		for (j = min + 1; j < n; j++) {
+			if (A[min] > A[j])
+				min = j;
+			if (min != i)
+				swap(A,i,min);
+		}
+		for (int t = 0; t < n; t++) 
+			printf("%d ", A[t]);
+		puts("");
+	}
+}
+
+void swap(int *A, int i, int min) {
+	*(A+i)
+	c = a;
+	a = b;
+	b = c;
+}
