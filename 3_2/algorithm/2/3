@@ -1,0 +1,45 @@
+#include <stdio.h>                                         
+#include <time.h>                                          
+
+void SelectionSort(int A[], int n);								//function head of selection sort
+void swap(int* A, int i, int min);								//function head of interchange element of Array A
+
+void main() {
+	srand(time(NULL));												
+	int A[100];
+	for (int i = 0; i < 100; i++) {								//make array A with rand function
+		A[i] = (rand() % 100 + 1);								//elements between 1 to 100
+	}
+	SelectionSort(A, 100);										//put A in function SelectionSort
+	printf("result\n");											//check the first state of A
+	for (int t = 0; t < 100; t++)
+		printf("%d ", A[t]);
+	puts("\n");
+}
+
+void SelectionSort(int A[], int n) {							//input Array A and element number
+	int i, j, min;
+	for (i = 0; i < n - 1; i++) {								//use for loop from 0 to 100
+		min = i;
+		for (j = min + 1; j < n; j++) {							//from min+1 to last element number n. find the smallest element
+			if (A[min] > A[j])									//if we find the smaller element than existing minimal change with it
+				min = j;
+		}
+		if (min != i) {											//after checking min+1 to last element number, if existing minimal has changed interchange the value of A[i] and A[min]
+			swap(A, i, min);
+		}
+		if (i % 10 == 0) {
+			printf("step %d\n", i);
+			for (int t = 0; t < n; t++)
+				printf("%d ", A[t]);
+			puts("\n");
+		}
+	}
+}
+
+void swap(int* pa, int i, int min) {							
+	int a = *(pa + i);
+	int b = *(pa + min);
+	*(pa + i) = b;
+	*(pa + min) = a;
+}
