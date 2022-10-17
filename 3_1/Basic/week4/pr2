@@ -2,10 +2,12 @@
 #include <limits.h>							//bring headerfile
 #include <float.h>							//bring headerfile
 
-void main() {								//start main. return void
+int main() {								//start main. return void
 
 	printf("%d < char < %d\n", CHAR_MIN, CHAR_MAX);		//output CHAR size in integer
 	printf("%d < int < %d\n", INT_MIN, INT_MAX);		//output INT size in integer
 	printf("%g < double < %g\n", DBL_MIN, DBL_MAX);		//output double size in g. automatically output in real number
 	printf("%g < float < %g\n", FLT_MIN, FLT_MAX);		//output double size in g. automatically output in real number
+	
+	return 0;
 }
