@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+typedef struct {
+	int radious;
+	int x;
+	int y;
+} circle;
+
+typedef struct {
+	int x;
+	int y;
+} point;
+
+void cprelation(circle c, point p);
+
+int main() {
+	
+	circle c1;
+	point p1;
+
+	printf("Input circle radious : ");
+	int rxy;
+	scanf_s("%d", &rxy);
+	c1.radious = rxy;
+	printf("Input circle x-coordinate : ");
+	scanf_s("%d", &rxy);
+	c1.x = rxy;
+	printf("Input circle y-coordinate : ");
+	scanf_s("%d", &rxy);
+	c1.y = rxy;
+
+	printf("Input point x-coordinate : ");
+	scanf_s("%d", &rxy);
+	p1.x = rxy;
+	printf("Input point y-coordinate : ");
+	scanf_s("%d", &rxy);
+	p1.y = rxy;
+
+	cprelation(c1, p1);
+
+	return 0;
+}
+
+void cprelation(circle c, point p) {
+
+	if (c.radious * c.radious > ((p.x - c.x) * (p.x - c.x) + (p.y - c.y) * (p.y - c.y))) {
+		puts("The point is in the circle.");
+	}
+	else if (c.radious * c.radious == ((p.x - c.x) * (p.x - c.x) + (p.y - c.y) * (p.y - c.y))) {
+		puts("The point is on the line of the circle.");
+	}
+	else {
+		puts("The point is out of the circle.");
+	}
+
+}
