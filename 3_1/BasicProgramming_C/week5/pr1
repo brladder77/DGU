@@ -1,5 +1,5 @@
 #include <stdio.h>		//bring headerfile
-void main() {			//start main
+int main() {			//start main
 	
 	printf("알파벳 소문자 5개를 입력하시오 : ");	//request users to input 5 small letter
 	char a1, a2, a3, a4, a5;			//set variables names(naming)
@@ -16,4 +16,6 @@ void main() {			//start main
 	printf("%c ", a4 - 32);				//〃
 	printf("%c", a5 - 32);				//〃
 	printf(" 입니다");					//print content
+	
+	return 0;
 }
