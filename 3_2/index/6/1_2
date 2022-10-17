@@ -1,0 +1,26 @@
+	c2.x = rxy;
+	printf("Input circle c2 y-coordinate : ");
+	scanf_s("%d", &rxy);
+	c2.y = rxy;
+
+	crelation(c1, c2);
+
+	return 0;
+}
+
+void crelation(circle c1, circle c2) {
+
+	if (abs(c1.radious - c2.radious) == (sqrt((c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y)) {
+	puts("The point is on the line of the circle.");
+	}
+	else if (abs(c1.radious - c2.radious) == (sqrt((c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y))|| (c1.radious + c2.radious) == (sqrt((c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y))))) {
+		puts("Circles meet at one point.");
+	}
+	else if (abs(c1.radious - c2.radious) == (sqrt((c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y)) {
+		puts("The point is on the line of the circle.");
+	}
+	else {
+		puts("The point is out of the circle.");
+	}
+
+}
