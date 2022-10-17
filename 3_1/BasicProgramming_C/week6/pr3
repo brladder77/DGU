@@ -1,4 +1,4 @@
-#include  <stdio.h>     //bring headerfile
+#include <stdio.h>      //bring headerfile
 #include <stdlib.h>     //"
 #include <time.h>       //"
 
@@ -16,7 +16,7 @@ int main() {        //start main
     int f = rand();         //put random value in f (seed by 3)
     srand(1);               //change seed to 1
     int g = rand();         //put random value in g (seed by 1)
-    int h = rand();         //put random value in f (seed by 1)
+    int h = rand();         //put random value in h (seed by 1)
     printf("%d\n%d\n\n%d\n%d\n\n%d\n\n%d\n\n%d\n%d\n\n", a, b, c, d, e, f, g, h);     //print each values
 
     srand(time(NULL));      //change seed to time
