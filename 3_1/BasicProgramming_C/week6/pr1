@@ -22,6 +22,7 @@ void main() {                   //start main
         num2 = a;               //put a value in num2
     }
     //8~23 line code listing each value by size (num1<num2<num3)
+    
     if (num3 * num3 + num2 * num2 > num1 * num1) {      //if square of the biggest value is shorter than the sum of square of the rest
         if (num1 == num2 && num2 == num3) {             //overlap if three values are same                  
             printf("정삼각형\n");           
