@@ -1,6 +1,6 @@
 #include <stdio.h>						//bring headerfile
 
-void main() {							//start main return int
+int main() {							//start main return int
 	int num1, num2;						//set variables names(naming)
 	printf("Input number a, b: ");		//output
 	scanf_s("%d %d", &num1, &num2);		//save values in variables address
@@ -8,4 +8,6 @@ void main() {							//start main return int
 	printf("%d + %d= %d\n", num1, num2, num1 + num2);		//output after plus num1, num2 
 	printf("%d - %d= %d\n", num1, num2, num1 - num2);		//output after minus num1, num2
 	printf("%d x %d= %d\n", num1, num2, num1 * num2);		//output after multiplication num1, num2
+	
+	return 0;
 }
