@@ -19,4 +19,6 @@ int main(void) {		//start main
 	printf("n 값을 입력하시오 : ");		//request users to input value of n
 	scanf_s("%d", &n);					//put value to n
 	printf("%d", func(n));				//call function func to find nth term than show it
+	
+	return 0;
 }
