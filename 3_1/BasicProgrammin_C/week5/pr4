@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <limits.h>				//각 자료형의 최댓값가 최솟값을 나타내기 위해 불러옴
-#include <float.h>				//각 자료형의 최댓값가 최솟값을 나타내기 위해 불러옴
+#include <limits.h>				//각 자료형의 최댓값과 최솟값을 나타내기 위해 불러옴
+#include <float.h>				//각 자료형의 최댓값과 최솟값을 나타내기 위해 불러옴
 int main() {
 
 	short s_max = SHRT_MAX;
@@ -48,4 +48,6 @@ int main() {
 	float y = 1.23456e-46;
 	printf("x = %e\n", x);
 	printf("y = %e\n", y);				//매우 작은 수를 나타내다 범위를 넘어서는 순간 언더플로우 발생. 제대로 출력이 되지 않는다.
+	
+	
 }
