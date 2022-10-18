@@ -5,10 +5,9 @@ int main() {
 
 	char c;
 	int charCount = 0;
-	int charCount2 = 0;
+	int spaceCount2 = 0;
 	int lineCount = 0;
 	char line[1024];
-	char* ofp;
 	
 	FILE* ifp = fopen("c:\\pr3.txt", "r");
 	if (ifp == NULL) {
@@ -23,17 +22,16 @@ int main() {
 		printf("%c", c);
 		if (c >= '!' && c <= 'z'||c=='\'') {
 			charCount++;
-			charCount2++;
 		}
 		else if (c == '\n') lineCount++;
 		else {
-			charCount2++;
+			spaceCount2++;
 		}
 	}
 
 	fclose(ifp);
 	puts("\n");
-	printf("문자 수(공백 제외) : %d\n문자 수(공백 포함) : %d\n줄 수 : %d\n", charCount, charCount2, lineCount);
+	printf("문자 수(공백 제외) : %d\n문자 수(공백 포함) : %d\n줄 수 : %d\n", charCount, charCount+spaceCount2, lineCount);
 
 
 	return 0;
