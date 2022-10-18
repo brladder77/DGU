@@ -1,3 +1,36 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+typedef struct {
+	int radious;
+	int x;
+	int y;
+} circle;
+
+void crelation(circle c1, circle c2);
+
+int main() {
+
+	circle c1, c2;
+
+	printf("Input circle c1 radious : ");
+	int rxy;
+	scanf_s("%d", &rxy);
+	c1.radious = rxy;
+	printf("Input circle c1 x-coordinate : ");
+	scanf_s("%d", &rxy);
+	c1.x = rxy;
+	printf("Input circle c1 y-coordinate : ");
+	scanf_s("%d", &rxy);
+	c1.y = rxy;
+
+	printf("Input circle c2 radious : ");
+	int rxy;
+	scanf_s("%d", &rxy);
+	c2.radious = rxy;
+	printf("Input circle c2 x-coordinate : ");
+	scanf_s("%d", &rxy);
 	c2.x = rxy;
 	printf("Input circle c2 y-coordinate : ");
 	scanf_s("%d", &rxy);
