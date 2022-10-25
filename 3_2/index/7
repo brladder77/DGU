@@ -1,0 +1,77 @@
+#include <stdio.h>
+#define a 4          //make a constant number a. it will be A row
+#define b 3          //make a constant number b. it will be A column
+#define c 2          //make a constant number c. it will be B row
+#define d 3          //make a constant number d. it will be B column
+
+void mul(int* pa, int* pb, int* pc, int sa, int sb, int sc, int sd);                //function head of multiply
+
+int main(void) {          //start main
+	int i, j;
+	int A[a][b];		 //set array A
+	int B[c][d];		 //set array B
+	int C[a][d];          //set array C, C will be the result of multiplied A, B so it must be axb array
+	if (b == c) {		//if A column number and b row number are same. (the only circumstance that we can multiply it)
+		printf("%d x %d 행렬 A를 입력하세요.\n", a, b);		//request user to input axb A array
+		for (i = 0; i < a; i++) {
+			for (j = 0; j < b; j++) {
+				printf("A[%d][%d] : ", i, j);
+				scanf_s("%d", &A[i][j]);
+			}
+		}
+		printf("%d x %d 행렬 B를 입력하세요.\n", c, d);		//request user to input cxd B array
+		for (i = 0; i < c; i++) {
+			for (j = 0; j < d; j++) {
+				printf("B[%d][%d] : ", i, j);
+				scanf_s("%d", &B[i][j]);
+			}
+		}
+
+		mul(A, B, C, a, b, c, d);                                                       //start function mul
+	}
+	else
+		printf("곱셉이 불가능합니다.\n");
+
+	return 0;                                                                       //return 0 to notify that process has end successfuly
+}
+
+void mul(int* pa, int* pb, int* pc, int sa, int sb, int sc, int sd) {               //make function named mul for two-dimensional array multiply
+																				//each pa, pb, pc means the first element address of A, B, C and get for more parametets that contain row and column number of A, B
+																				
+	int temp, count = 0;                                                        //set variable temp for save multiply result, and set count to 0
+
+	for (int i = 0; i < sa; i++) {                                              //loop i to change A row
+		for (int j = 0; j < sd; j++) {                                          //loop j to change B column
+			temp = 0;                                                           //initialize temp to 0 for each j loop
+			for (int k = 0; k < sc; k++) {                                      //use loop k to change A column and B row at the same time
+				temp += ((*(pa + sb * i + k)) * (*(pb + sd * k + j)));          //save multiplied A B value to temp
+			}
+			*(pc + count) = temp;                                               //save temp value in order to c
+			count++;                                                            //when each j loop end, it means each multiply ends. then increment count
+		}
+	}
+
+	printf("    행렬 A\n");                                                   //show array A
+	for (int i = 0; i < sa * sb; i++) {
+		printf("%3d ", *(pa + i));
+		if ((i + 1) % sb == 0) {                                                //when one row ends, move to next line
+			puts("");
+		}
+	}
+	printf("    행렬 B\n");                                                   //show array B
+	for (int i = 0; i < sc * sd; i++) {
+		printf("%3d ", *(pb + i));
+		if ((i + 1) % sd == 0) {                                              //when one row ends, move to next line
+			puts("");
+		}
+	}
+
+	printf("--------- 곱셈결과 C ---------\n");
+	printf("    행렬 C\n");                                                   //show array C
+	for (int i = 0; i < sa * sd; i++) {
+		printf("%3d ", *(pc + i));
+		if ((i + 1) % sd == 0) {                                                //when one row ends, move to next line
+			puts("");
+		}
+	}
+}
