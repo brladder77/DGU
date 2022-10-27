@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+int Minimum(int A[], int n);									//배열에서 최소값 구하는 Minimum 함수 
+int Maximum(int A[], int n);									//배열에서 최대값 구하는 Maximum 함수
+void FindMinMax(int A[], int n, int* Minimum, int* Maximum);	//최소값 최대값 동시에 구하는 FindMinMax 함수
+
+int main() {													//main 함수 시작
+	srand((unsigned)(time(NULL)));								//time, srand 함수 이용해 난수 생성
+	int A[1000];												//1000 개의 원소를 갖는 배열 A 생성
+	for (int i = 0; i < 1000; i++) {							//rand 함수 이용해 1부터 100000 사이 1000개 난수 생성	
+		A[i] = ((rand() % 10000) * 10 + rand() % 10 + 1);		
+		for (int j = 0; j < i; j++) {
+			if (A[i] == A[j])									//중복되는 난수가 생성되면 이전으로 돌아가 그 난수만 다시 생성
+				i--;
+		}
+	}
+	int Min = 0, Max = 0;										//정수 Min, Max 만들어주고 0 넣어주자
+	FindMinMax(A, 1000, &Min, &Max);							//최소값 최대값을 함수 내에서 구해 main 함수에서 쓸 것이므로 &이용해 주소 넣어준다.
+	printf("최소값은 %d 입니다.\n", Minimum(A, 1000));
+	printf("최대값은 %d 입니다.\n", Maximum(A, 1000));
+	printf("최소값은 %d 입니다.\n", Min);
+	printf("최대값은 %d 입니다.\n", Max);						//제대로 구했는지 확인하기 위해 이전에 만들었던 함수 Minimum, Maximum 이용해 FindMinMax 값과 동일한지 비교
+	
+	return 0;													//main 함수 정상 종료되었음
+}																	
+																	
+int Minimum(int A[], int n) {								
+	int i, Temp;
+	Temp = A[0];												//Temp를 배열 A의 첫번째 원소로 설정
+	for (i = 1; i < n; i++) {									//n번째 함수까지 Temp와 비교하며 더 작은 원소가 나타나면 Temp를 더 작은 원소로 바꿔준다	
+		if (Temp > A[i])
+			Temp = A[i];
+	}
+	return Temp;												//배열에서 가장 작은 원소가 들어가 있는 Temp 반환
+}
+
+int Maximum(int A[], int n) {									//배열에서 최소값 구하는 Maximum 함수
+	int i, Temp;
+	Temp = A[0];												//Temp를 배열 A의 첫번째 원소로 설정
+	for (i = 1; i < n; i++) {									//n번째 함수까지 Temp와 비교하며 더 큰 원소가 나타나면 Temp를 더 큰 원소로 바꿔준다	
+		if (Temp < A[i])
+			Temp = A[i];
+	}
+	return Temp;												//배열에서 가장 큰 원소가 들어가 있는 Temp 반환
+}
+
+void FindMinMax(int A[], int n, int* Minimum, int* Maximum) {	
+	int i, Small, Large; *Minimum = A[0]; *Maximum = A[0];		//main 함수에서 받은 Min, Max에 배열 A의 첫번째 원소 넣어준다
+	for (i = 1; i < n - 1; i += 2) {							//2칸씩 뛰며 반복할 것이므로 2번째 원소부터 n-1번째 원소까지 
+		if (A[i] < A[i + 1]) {									//i번째 원소가 i+1번째 원소보다 작을 경우는 Small에 A[i]를 Large에 A[i+1]을 넣는다
+			Small = A[i];
+			Large = A[i + 1];
+		}
+		else { Small = A[i + 1]; Large = A[i]; }				//i번째 원소가 i+1번째 원소보다 큰 경우는 Small에 A[i+1]를 Large에 A[i]을 넣는다
+		if (Small < *Minimum)									//이후 Smal과 Large를 Min Max와 비교하며 더 작거나 더 큰 경우 Min, Max 값을 바꿔준다.
+			*Minimum = Small;
+		if (Large > *Maximum)
+			*Maximum = Large;
+	}
+	return;
+}
