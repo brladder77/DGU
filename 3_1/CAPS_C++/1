@@ -1,0 +1,15 @@
+#include <iostream>
+using namespace std;
+
+namespace digit {
+	int var = 0;
+	void print(int a) {
+		cout << a << "\n";
+	}
+}
+namespace bin {
+	void pring(int a) {
+		int ori = a; i = 0;
+		char binary
+	}
+}
