@@ -1,0 +1,108 @@
+#include <iostream>
+#define MaxNum 5
+using namespace std;
+
+namespace digit
+{
+	void print(int a)
+	{
+		cout << a << "\n";
+	}
+}
+namespace bin
+{
+	void print(int a)
+	{
+		int ori = a;
+		char binary[33] = {};
+		int i = 0;
+		while (ori != 0)
+		{
+			binary[i++] = (ori & 1) + '0';
+			ori = ori >> 1;
+		}
+		for (int j = i - 1; j >= 0; j--)
+		{
+			cout << binary[j];
+		}
+		cout << "\n";
+	}
+
+
+}
+namespace Bubble
+{
+	void print(int* array)
+	{
+		int count = 0;
+		for (int i = 0; i < MaxNum - 1; i++)
+		{
+			for (int j = 0; j < MaxNum - count - 1; j++)
+			{
+				if (array[j] > array[j + 1])
+				{
+					swap(array[j], array[j + 1]);
+				}
+			}
+			count++;
+		}
+
+		for (int i = 0; i < MaxNum; i++)
+		{
+			cout << array[i] << " ";
+		}
+	}
+}
+namespace Insertion
+{
+	void print(int* array)
+	{
+		int cursor = 1;
+		bool isSwap = false;
+		for (int j = 0; j < MaxNum - 1; j++)
+		{
+			for (int i = 0; i < cursor; i++)
+			{
+				if (array[cursor - i] < array[cursor - i - 1])
+				{
+					swap(array[cursor - i], array[cursor - i - 1]);
+					isSwap = true;
+				}
+				if (isSwap == false)
+					break;
+				isSwap = false;
+			}
+			cursor++;
+		}
+		for (int i = 0; i < MaxNum; i++)
+		{
+			cout << array[i] << " ";
+		}
+
+	}
+}
+
+
+void main()
+{
+	int a;
+	int* myarray = new int[MaxNum];
+	cout << "배열에 들어갈 수(5개): ";
+	for (int i = 0; i < MaxNum; i++)
+	{
+		cin >> a;
+		myarray[i] = a;
+	}
+
+	cout << "정렬 전 배열: ";
+	for (int i = 0; i < MaxNum; i++)
+	{
+		cout << myarray[i] << " ";
+	}
+	cout << "\n";
+
+	cout << "정렬 후 배열: ";
+	Bubble::print(myarray);
+	//Insertion::print(myarray);
+
+}
