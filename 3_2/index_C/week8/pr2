@@ -1,0 +1,64 @@
+#include <stdio.h>
+#define MAXSIZE 5		//스택 크기 정의
+int stack[MAXSIZE];		//스택 통
+int top;				//스택의 상단
+
+void init_stack() {		//스택 초기화
+	top = -1;
+}
+
+int push(unsigned int val) {
+	if (top >= MAXSIZE - 1) {
+		printf("\n****Stack Overflow****\n\n");
+		return -1;
+	}
+	stack[++top] = val;
+	return val;
+}
+
+int pop(void) {
+	if (top < 0) {
+		printf("\n****Stack Underfow****\n\n");
+		return -1;
+	}
+	return stack[top--];
+}
+
+void print_stack() {
+	int i;
+	printf("\n From Top-----> To Bottom\n\n");
+	for (i = top; i >= 0; i--)
+		printf("%-6d", stack[i]);
+	puts("\n");
+}
+
+int main(void) {
+	int i;
+	init_stack();
+
+	printf("\nPush 1,2,3");
+	push(1);
+	push(2);
+	push(3);
+	print_stack();
+
+	printf("\n*** Pop 수행 후 \n");
+	i = pop();					
+	print_stack();
+	printf("\n popped value is %d \n\n", i);
+
+	printf("\n Push 4,5");
+
+	push(4);
+	push(5);
+	print_stack();
+
+	printf("\n Now Stack is full, push 3");
+	push(3);
+	print_stack();
+
+	printf("\n Initialize stack");
+	init_stack();
+
+	return 0;
+}
