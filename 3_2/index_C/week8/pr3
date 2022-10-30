@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+int main() {
+
+	struct Ex_struct {
+		char* Name;
+		int Em_num;
+		int Salary;
+	};
+
+	struct Ex_struct* St_p;
+
+	struct Ex_struct Employee = { "홍길동", 110, 3000 };
+
+	St_p = &Employee;
+
+	puts("구조체 변수를 이용하여 출력");
+	printf("사원이름 : %s\n", Employee.Name);
+	printf("사원번호 : %d\n", Employee.Em_num);
+	printf("연봉 :%d\n\n", Employee.Salary);
+
+	puts("구조체 주소변수를 이용하여 출력");
+	printf("사원이름 : %s\n", St_p->Name);
+	printf("사원번호 : %d\n", St_p->Em_num);
+	printf("연봉 : %d\n", St_p->Salary);
+
+	return 0;
+
+}
