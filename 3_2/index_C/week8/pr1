@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <string.h>
+
+void newpw(int key[8]);
+void crypw(int key[8]);
+
+
+void main() {
+
+	while (1) {
+
+		int num;
+		puts("1. 새로운 비밀번호 등록");
+		puts("2. 비밀번호 복호화");
+		puts("0. 종료");
+		printf("원하는 번호를 입력하세요 : ");
+		scanf_s("%d", &num);
+
+		if (num == 0) {
+			break;
+		}
+
+		switch (num) {
+		case 1:
+			printf("키를 입력해주세요 : ");
+			int key[8];
+			scanf_s("%d", key);
+			newpw(key);
+			break;
+
+		case 2:
+			printf("키를 입력해주세요 : ");
+			int key1[8];
+			scanf_s("%d", key);
+			crypw(key);
+			break;
+
+		default:
+			puts("잘못된 번호입니다.");
+			break;
+		}
+
+	}
+}
+
+void newpw(int key[8]) {
+	printf("사이트 이름을 입력하세요 : ");
+	char name[20];
+	scanf_s("%s", name, 20);
+	printf("사이트 주소를 입력하세요 : ");
+	char ad[40];
+	scanf_s("%s", ad, 40);
+	printf("사이트 아이디를 입력하세요 : ");
+	char id[20];
+	scanf_s("%s", id, 20);
+	printf("비밀번호를 입력하세요 : ");
+	char pw[30];
+	scanf_s("%s", pw, 30);
+
+	int i;
+	int crypw[30];
+	for (i = 0; i < strlen(pw); i++) {
+		if (i < 8) {
+			crypw[i] = pw[i] ^ key[i];
+			printf("%c", crypw[i]);
+		}
+		else {
+			crypw[i] = pw[i] ^ key[i % 7 - 1];
+			printf("%c", crypw[i]);
+		}
+	}
+
+	puts("");
+}
+
+void crypw(int key[8]) {
+	printf("비밀번호를 입력하세요 : ");
+	char crypw[30];
+	scanf_s("%s", crypw, 30);
+
+	int i;
+	int pw[30];
+	for (i = 0; i < strlen(crypw); i++) {
+		if (i < 8) {
+			pw[i] = crypw[i] ^ key[i];
+			printf("%c", pw[i]);
+		}
+		else {
+			pw[i] = crypw[i] ^ key[i % 7 - 1];
+			printf("%c", pw[i]);
+		}
+	}
+
+	puts("");
+
+}
