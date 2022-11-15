@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+int main() {
+
+	puts("원하는 기능의 번호를 선택하세요,");
+	puts("1. 입력");
+	puts("2. 제거");
+	puts("3. 검색");
+	puts("0. 종료");
+
+	int num;
+	scanf_s("%d", &num);
+	char name[10];
+	int score;
+
+	switch (num) {
+
+	case 1:
+		printf("학생의 이름 : "); 
+		gets_s(name, 10);
+
+		printf("학생의 성적 : ");
+		scanf_s("%d", &score);
+		break;
+
+	case 2:
+		puts("North"); break;
+	case 3:
+
+		puts("South"); break;
+	case 4:
+
+		puts("East"); break;
+	}
+
+	return 0;
+}
