@@ -1,125 +1,215 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>	//malloc 사용 위해 헤더파일 참조
+#include <string.h>	//strlen 사용 위해 헤더파일 참조
 
-void removeat(char* name);
-void print();
-void push_back(char* name, int score);
-node* makenode(char* name, int socre);
+void Clear() {	//엔터 입력 전까지 버퍼 값 무시하기 위한 함수
+	while (getchar() != '\n');
+}
 
-typedef struct Dnode {
-	char*  name;
+typedef struct {	//학생 이름, 점수, 등수를 저장할 구조체
+	char name[20];
 	int score;
-	Dnode* prev;
-	Dnode* next;
+	int rank;
+}Data;
+
+typedef struct Dnode {	//이중연결리스트
+	Data* data;
+	struct Dnode* prev;
+	struct Dnode* next;
 } node;
 
-node* head, * tail;
+node* head, * tail;	//노드 head, tail 선언
 
-int main() {
-
-	init();
-
-	puts("원하는 기능의 번호를 선택하세요,");
-	puts("1. 입력");
-	puts("2. 제거");
-	puts("3. 검색");
-	puts("0. 종료");
-
-	int num;
-	scanf_s("%d", &num);
-	char name[10];
-	int score;
-
-	switch (num) {
-
-	case 1:
-		printf("학생의 이름 : "); 
-		gets_s(name, 10);
-
-		printf("학생의 성적 : ");
-		scanf_s("%d", &score);
-
-		push_back(name, score);
-		break;
-
-	case 2:
-
-		printf("학생의 이름 : ");
-		gets_s(name, 10);
-		remobeat(name);
-		puts("제거되었습니다."); break;
-
-	case 3:
-
-		puts("South"); break;
-	case 4:
-
-		puts("East"); break;
-	}
-
-	return 0;
-}
-
-
-void print() {
+//노드 삭제시 등수 변경을 위한 함수
+void UpRanking(Data* del_data) 
+{
 	node* p;
-	p = head;
-	while (p->next != tail) {
-		printf("%d-->", p->name);
-		printf("%d-->", p->score);
-		p = p->next;
-	}
-	printf("%s %d  ", p->name,p->score); puts("출력 끝");
-}
+	p = head->next;	//head 다음 노드부터
 
-void init() {
-	head = (node*)malloc(sizeof(node));
-	tail = (node*)malloc(sizeof(node));
-	head->name = 0;
-	head->score = 0;
-	tail->name = 0;
-	tail->score = 0;
-
-	head->next = tail;
-	head->prev = head;
-	tail->prev = head;
-	tail->next = tail;
-}
-
-void push_back(char* name, int score) {
-	node* newnode = makenode(name,score);
-	node* p;
-	p = tail;
-	p->prev->next = newnode;
-	newnode->prev = p->prev;
-	p->prev = newnode;
-	newnode->next = p;
-}
-
-//삭제
-
-void removeat(char* name) {
-	node* p;
-	p = head->next;
-	while (p->next != tail) {
-		if (p->name == name) {
-			p->next->prev = p->prev;
-			p->prev->next = p->next;
-			free(p);
-			return;
+	while (p->next != head) {	//tail 앞까지
+		if (del_data->rank < p->data->rank) {	//등수가 더 낮은 노드들 등수 한칸씩 올려줌
+			p->data->rank--;
 		}
 		p = p->next;
 	}
 }
 
-// 노드 생성
+//노드 생성시 등수 변경을 위한 함수. 동점은 더 늦게 등록된 학생이 등수 더 낮게 설정
+void UpdateRanking(Data* new_data)
+{
+	node* p;
+	p = head->next;
 
+	while (p->next != head) {
+		if (new_data->score < p->data->score) {	//새로 생긴 노드 점수가 더 낮으면 새로 생긴 노드 등수 하락
+			new_data->rank++;
+		}
+		else {	//아니면 기존 노드 등수 하락
+			p->data->rank++;
+		}
+
+		p = p->next;
+	}
+}
+
+// 노드 생성
 node* makenode(char* name, int score)
 {
-	node* p = (node*)malloc(sizeof(node));
-	p->name = name;
-	p->score = score;
-	p->next = NULL;
-	p->prev = NULL;
+	node* p = (node*)malloc(sizeof(node));	//공간할당
+	p->data = (Data*)malloc(sizeof(Data));
+
+	strcpy(p->data->name, name);	//이름 넣어줌
+	p->data->score = score;	//점수 넣어줌
+	p->data->rank = 1;	//생성시 등수는 1등으로 시작해서 업데이트됨
+
+	p->next = NULL;	//다음 연결 비워둠
+	p->prev = NULL;	//이전 연결 비워둠
+
 	return p;
+}
+
+//검색
+void search(char* name)
+{	
+	int lenA = strlen(name);	//입력된 이름 길이 파악
+	node* p;
+	p = head->next;
+
+	while (p->next != head) {	
+		if (0 == strncmp(name, p->data->name, lenA)) {	//길이만큼 비교해 같은 이름의 학생 찾으면 정보 출력
+			printf("이름 : %s\n", p->data->name);
+			printf("점수 : %d\n", p->data->score);
+			printf("등수 : %d\n\n", p->data->rank);
+			return;
+		}
+		p = p->next;
+	}
+	puts("해당 학생을 찾을 수 없습니다.");	//못 찾은 경우
+}
+
+//초기화
+void init() 
+{	
+	//head tail 공간 할당하고 이름은 비우고 점수와 등수는 0 넣어줌
+	head = (node*)malloc(sizeof(node));
+	tail = (node*)malloc(sizeof(node));
+	head->data = (Data*)malloc(sizeof(Data));
+	tail->data = (Data*)malloc(sizeof(Data));
+
+	strcpy(head->data->name, "\0");
+	head->data->score = 0;
+	head->data->rank = 0;
+
+	strcpy(tail->data->name, "\0");
+	tail->data->score = 0;
+	tail->data->rank = 0;
+
+	//head와 tail간 원형 연결 구성
+	head->next = head;
+	head->prev = head;
+	tail->prev = head;
+	tail->next = head;
+}
+
+//리스트 마지막 자리에 노드 추가
+void push_back(char* name, int score)
+{
+	node* newnode = makenode(name, score);	//makenode 함수 이용해 newnode 생성
+
+	UpdateRanking(newnode->data);	//등수 업데이트
+
+	tail->prev->next = newnode;	//tail 앞에 newnode 넣어주는 과정
+	newnode->prev = tail->prev;
+	tail->prev = newnode;
+	newnode->next = tail;
+}
+
+//삭제
+void removeat(char* name) 
+{
+	int lenA = strlen(name);
+	node* p;
+	p = head->next;
+
+	while (p->next != head) {
+		if (0==strncmp(name,p->data->name, lenA)) {	//같은 이름의 학생 찾은 경우 삭제
+			p->next->prev = p->prev;
+			p->prev->next = p->next;
+
+			UpRanking(p->data);	//등수 업데이트
+
+			free(p);	//노드 할당된 공간 없애줌
+
+			puts("제거했습니다.");
+
+			return;
+		}
+		p = p->next;
+	}
+	puts("해당 학생을 찾을 수 없습니다.");	//못 찾은 경우
+}
+
+
+
+int main() {
+
+	puts("*******학생들의 자료구조 시험 성적********");
+
+	init();	//head tail 할당 및 초기화
+
+	while(1) {	//0 나오기전까지 무한반복
+		
+		int num = 5, score = 0;	//num 5로 설정해 반복될 때 이상한 값 들어가는 경우 방지
+		char name[10];
+
+		puts("----------------------------------------------------");
+		puts("1. 입력");
+		puts("2. 제거");
+		puts("3. 검색");
+		puts("0. 종료");
+		puts("----------------------------------------------------");
+		printf("원하는 기능의 번호를 선택하세요 : ");
+		scanf_s("%d%*c", &num);
+		puts("");
+
+		switch (num) {
+
+		case 0:
+			puts("종료");
+			return 0;
+
+		case 1:
+			printf("학생의 이름 : ");
+			gets_s(name, 10);
+
+			printf("학생의 성적 : ");
+			scanf_s("%d%*c", &score);
+				
+			push_back(name, score);
+			puts("");
+			break;
+
+		case 2:
+			printf("학생의 이름 : ");
+			gets_s(name, 10);
+			removeat(name);
+			puts("");
+			break;
+
+		case 3:
+			printf("학생의 이름 : ");
+			gets_s(name, 10);
+
+			search(name);
+			break;
+
+		default:
+			puts("잘못된 번호입니다.\n");
+			Clear();	//잘못된 입력 엔터 제외 버퍼에서 삭제
+			break;
+			
+		}
+	}
 }
