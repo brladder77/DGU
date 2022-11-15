@@ -1,6 +1,23 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+void removeat(char* name);
+void print();
+void push_back(char* name, int score);
+node* makenode(char* name, int socre);
+
+typedef struct Dnode {
+	char*  name;
+	int score;
+	Dnode* prev;
+	Dnode* next;
+} node;
+
+node* head, * tail;
 
 int main() {
+
+	init();
 
 	puts("원하는 기능의 번호를 선택하세요,");
 	puts("1. 입력");
@@ -21,10 +38,17 @@ int main() {
 
 		printf("학생의 성적 : ");
 		scanf_s("%d", &score);
+
+		push_back(name, score);
 		break;
 
 	case 2:
-		puts("North"); break;
+
+		printf("학생의 이름 : ");
+		gets_s(name, 10);
+		remobeat(name);
+		puts("제거되었습니다."); break;
+
 	case 3:
 
 		puts("South"); break;
@@ -34,4 +58,68 @@ int main() {
 	}
 
 	return 0;
+}
+
+
+void print() {
+	node* p;
+	p = head;
+	while (p->next != tail) {
+		printf("%d-->", p->name);
+		printf("%d-->", p->score);
+		p = p->next;
+	}
+	printf("%s %d  ", p->name,p->score); puts("출력 끝");
+}
+
+void init() {
+	head = (node*)malloc(sizeof(node));
+	tail = (node*)malloc(sizeof(node));
+	head->name = 0;
+	head->score = 0;
+	tail->name = 0;
+	tail->score = 0;
+
+	head->next = tail;
+	head->prev = head;
+	tail->prev = head;
+	tail->next = tail;
+}
+
+void push_back(char* name, int score) {
+	node* newnode = makenode(name,score);
+	node* p;
+	p = tail;
+	p->prev->next = newnode;
+	newnode->prev = p->prev;
+	p->prev = newnode;
+	newnode->next = p;
+}
+
+//삭제
+
+void removeat(char* name) {
+	node* p;
+	p = head->next;
+	while (p->next != tail) {
+		if (p->name == name) {
+			p->next->prev = p->prev;
+			p->prev->next = p->next;
+			free(p);
+			return;
+		}
+		p = p->next;
+	}
+}
+
+// 노드 생성
+
+node* makenode(char* name, int score)
+{
+	node* p = (node*)malloc(sizeof(node));
+	p->name = name;
+	p->score = score;
+	p->next = NULL;
+	p->prev = NULL;
+	return p;
 }
