@@ -1,0 +1,480 @@
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable : 4996)
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char copy_str(char*, char*);	//srcfile에서 분리한 label을 symtab으로 옮길 때 사용하기 위한 함수 선언
+
+typedef struct optab {	//optab 위한 구조체 선언
+	char instruction[10];	//명령어
+	char code[10];	//명령어 코드 (문자열 형태)
+	int int_code;	//명령어 코드 (정수 형태)
+}Optab;
+
+Optab OP[50] = { 0, };	//명령어와 코드를 저장할 구조체	배열 생성
+
+
+typedef struct src {	//srcfile을 분리해 저장할 구조체 선언
+	char Label[10];
+	char Opcode[10];
+	char Operand[10];
+}SRCFILE;
+
+SRCFILE SRC[50] = { 0, };	//srcfile 자료구조 저장할 구조체 배열 생성
+
+
+typedef struct symtab {	//symtab을 저장할 구조체 선언
+	char Label[10];
+	int Loc;	//symtab label 주소 (정수 형태)
+	char sLoc[10];	//symtab label 주소 (문자열 형태)
+	int flag;
+}SYMTAB;
+
+SYMTAB ST[50] = { 0, };	//symtab 저장할 구조체 배열 생성
+
+
+typedef struct locctr {	//locctr 구조체 
+	int Loc;	//주소 (정수 형태)
+}LOCCTR;
+
+LOCCTR LT[50] = { 0, };	//locctr 저장할 구조체 배열 생성
+
+
+typedef struct objectcode {	//옵젝코드 구조체
+	char code[10];	//옵젝코드
+}OCODE;
+
+OCODE OC[50] = { 0, };	//옵젝코드 저장할 구조체 배열 생성
+
+int makeOpTab(FILE*);	//OpTable 제작 및 optable 몇 줄인지 return
+int seperateSrcFile(FILE*);	//srcfile 자료구조로 분리해 저장 및 src 몇 줄인지 return
+int makeSymTab(int);	//symtable 제작 및 symtable 몇 줄인지 return
+void makeIntFile(FILE*, int); //INTFILE 생성 함수
+void makeObjectCode(int, int, int);	//옵젝코드 생성 함수
+void ObjFile(int, int, int);	//OBJFILE 생성 함수
+void Read(const char*); //읽어온 파일 분석
+
+int main() {
+
+	char fname[200];	//파일 입력받을 배열 생성
+
+	printf("파일 이름 입력: ");	//파일 이름 입력받기
+	scanf("%s", fname);
+	puts("");
+
+	Read(fname);
+
+	return 0;
+}
+
+void Read(const char* fname) {
+
+	FILE* ifp = fopen("optab.txt", "r");	//optab 읽기용으로 open
+	FILE* out = fopen("INTFILE.txt", "w");	//INTFILE 쓰기용으로 open
+	FILE* fp = fopen(fname, "r");	//입력받은 파일 open
+
+	if (fp == NULL) {	//입력한 파일 없을 경우 error
+		perror("입력한 파일 열기 실패");
+		exit(0);
+	}
+
+	else if (ifp == NULL) {	//optab 파일 없을 경우 error
+		perror("optab 파일 열기 실패");
+		exit(0);
+	}
+
+	else {	//파일 다 있을 경우 실행
+		int op_num = makeOpTab(ifp);	//optab 몇 줄인지(instruction 몇 가지인지 파악) 및 정리된 OPTABLE 출력
+		int src_num = seperateSrcFile(fp);	//srcfile 몇 줄인지(총 몇줄짜리 명령어 파일인지 파악) 및 정리된 SRCFILE 출력
+		puts("");
+		int sym_num = makeSymTab(src_num);	//symtab 몇 줄인지(라벨이 총 몇 개인지 파악) 및 정리된 SYMTABLE 출력
+
+		makeIntFile(out, src_num);	//INTFILE 생성 및 줄력
+		makeObjectCode(src_num, op_num, sym_num);	//옵젝코드 생성
+		puts("");
+
+		ObjFile(src_num, op_num, sym_num);	//OBJFILE 생성 및 출력
+
+		//파일들 닫아줌
+		fclose(fp);
+		fclose(out);
+		fclose(ifp);
+	}
+}
+
+char copy_str(char* dest, char* src) {	//srcfile에서 분리한 label 주소를 symtab의 label에 넘겨줄 때 사용하는 함수
+	while (*src) {
+		*dest = *src;	//다음 INDEX 주소로 하나씩 이동하며 넘겨줌
+		src++;
+		dest++;
+	}
+
+	*dest = '\0';
+}
+
+int makeOpTab(FILE* ifp) {	//OpTable 제작 및 optable 몇 줄인지 return
+	char c;
+	int onum = 0, i = 0, j = 0, k = 0, space = 0;	//onum은 몇번째 instruction 인지 파악하기 위한 변수
+	//space는 띄어쓰기를 몇 번 한 상태인지 알려준다. instruction 뒤에 한칸 띄고 code가 써 있기 때문
+
+	while (1) {
+		c = fgetc(ifp);	//파일에서 한 글자씩 읽어오며 배열에 복사해 넣어주고 배열 끝에 '\0' 넣어 끝 부분임을 명시
+
+		if (feof(ifp)) {	//파일 끝까지 읽었을 경우 while 문 탈출
+			OP[onum].code[j] = '\0';
+			OP[onum].instruction[i] = '\0';
+			break;
+		}
+		if (c == ' ') {		//띄어쓰기를 기준으로 instruction과 code 구분
+			space = 1;
+		}
+		else if (c == '\n') {	//다음줄로 넘어갈 때 문자열 끝에 '\0' 넣어 끝부분임을 명시
+			OP[onum].instruction[i] = '\0';
+			OP[onum].code[j] = '\0';
+			onum++; i = 0, j = 0;
+			space = 0;	//띄어쓰기 다시 0으로 초기화
+		}
+		else if (space == 0) {	//띄어쓰기 전에는 instruction
+			OP[onum].instruction[i] = c;
+			i++;
+		}
+		else if (space == 1) {	//띄고 나서는 code
+			OP[onum].code[j] = c;
+			j++;
+		}
+
+		for (k = 0; k <= onum; k++) {	//문자 형태로 저장된 16진수를 정수형으로 바꾸어 저장
+			OP[k].int_code = strtol(OP[k].code, NULL, 16);
+		}
+	}
+
+	for (k = 0; k <= onum; k++) {	//저장한 구조체 출력
+		printf("%s\t%s\t%d\n", OP[k].instruction, OP[k].code, OP[k].int_code);
+	}
+	puts("");
+	return onum;	//몇줄짜리 optab인지 return
+}
+
+int seperateSrcFile(FILE* ifp) {	//srcfile 자료구조로 분리해 저장 및 src 몇 줄인지 return
+	char c;
+	int snum = 0, i = 0, j = 0, k = 0, space = 0;	//snum은 src 몇번째 명령어 수행중인지 알려줌
+
+	while (1) {
+		c = fgetc(ifp);
+		if (feof(ifp)) {	//파일 끝까지 읽었을 경우 while 문 탈출하며 모든 배열 끝마무리 지어줌
+			SRC[snum].Operand[k] = '\0';
+			SRC[snum].Opcode[j] = '\0';
+			SRC[snum].Label[i] = '\0';
+			break;
+		}
+		if (c == ' ') {	//띄어쓰기 기준으로 label, opcode, operand 구분
+			if (space == 1) {
+				if (j == 0) {	//띄어쓰기 나왔을 때 opcode가 만들어진 상태인지 확인
+					continue;
+				}
+				else {	//만들어진 경우 operand가 나올 것이므로 space 2로 변경
+					space = 2;
+				}
+			}
+			else if (space == 2) {	//연속된 띄어쓰기는 무시
+				if (k == 0) {
+					continue;
+				}
+			}
+			else {	//첫 띄어쓰기인 경우 opcode가 나올 것이므로 space 1로 변경
+				space = 1;
+			}
+
+		}
+		else if (c == '\n') {	//다음줄로 넘어갈 때 각 문자열들 끝맺어주며 띄어쓰기 초기화
+			SRC[snum].Operand[k] = '\0';
+			SRC[snum].Opcode[j] = '\0';
+			SRC[snum].Label[i] = '\0';
+			snum++; i = 0, j = 0, k = 0;	//snum도 다음 줄로 넘어감
+			space = 0;
+		}
+		else if (space == 0) {	//띄어쓰기 나오기 전일 경우 label에 저장
+			SRC[snum].Label[i] = c;
+			i++;
+		}
+		else if (space == 1) {	//첫 띄어쓰기 이후 opcode에 저장
+			SRC[snum].Opcode[j] = c;
+			j++;
+		}
+		else if (space == 2) {	//opcode 저장 후 띄어쓰기 나온 경우 operand에 저장
+			SRC[snum].Operand[k] = c;
+			k++;
+		}
+	}
+
+	for (i = 0; i <= snum; i++) {	//저장한 구조체 출력
+		printf("%s\t%s\t%s\n", SRC[i].Label, SRC[i].Opcode, SRC[i].Operand);
+	}
+	puts("");
+	return snum;	//src 몇 줄인지 return 
+}
+
+int makeSymTab(int srcnum) {	//symtable 제작 및 symtable 몇 줄인지 return
+	int i,j, sfl, sl = 0, ll = 0;	//sfl은 srcfile 줄 관리, sl는 symtab 줄 관리, ll는 locctr 줄 관리
+	//특정 label 골라내기 위해 label 별 문자열 생성
+
+	char start[] = "start", first[] = "first", word[] = "word", byte[] = "byte";
+	char resb[] = "resb", resw[] = "resw";
+	//label과 operand에서 시작주소와 memory 얼마나 차지하는지 파악하기 위해 문자열 생성
+
+	int start_loc = 0;	//시작주소 저장할 변수
+	int cur_loc = 0;	//현재 주소 저장할 변수
+
+	for (sfl = 0; sfl <= srcnum; sfl++) {	//srcfile 명령줄 만큼만 for loop
+
+		if (SRC[sfl].Label[0] >= 'a' && SRC[sfl].Label[0] <= 'z') {	//label 이 있는 경우
+
+			copy_str(ST[sl].Label, SRC[sfl].Label);	//label 주소 symtab으로 옮겨줌
+
+			if (0 == strcmp(SRC[sfl].Opcode, start)) {	//opcode 가 start 일 경우
+				LT[ll].Loc = strtol(SRC[sfl].Operand, NULL, 16);	//16진수 사용하기 위해 strtol 사용. locctr location 에 주소 넣어줌
+				ST[sl].Loc = strtol(SRC[sfl].Operand, NULL, 16);	//16진수 사용하기 위해 strtol 사용. symtab location 에 주소 넣어줌
+				start_loc = strtol(SRC[sfl].Operand, NULL, 16);	//시작주소 저장
+				ll++, sl++, sfl++;	//각각 다음 index로 이동
+			}
+
+			if (0 == strcmp(SRC[sfl].Label, first)) {	//label 이 first 일 경우
+				ST[sl].Loc = start_loc;	//locctr 주소에 시작주소 넣어줌
+				LT[ll].Loc = start_loc;	//symtab 주소에 시작주소 넣어줌
+				copy_str(ST[sl].Label, SRC[sfl].Label);	//label 넣어줌
+				cur_loc = start_loc + 3;	//명령어 하나는 3byte이므로 현재 주소 3bytes 이동
+				ll++, sl++;	//symtab, locctr 만 다음 index로 넘어감. srcfile은 for문을 통해 index 다음으로 넘어감
+				continue;	//continue 통해 다음 루프로 넘어감
+			}
+
+			else if (0 == strcmp(SRC[sfl].Opcode, resb)) {	//opcode 가 resb 일 경우 operand byte 만큼 주소 더해줌
+				ST[sl].Loc = cur_loc;
+				LT[ll].Loc = cur_loc;
+				cur_loc += strtol(SRC[sfl].Operand, NULL, 16);
+				ll++, sl++;
+			}
+			else if (0 == strcmp(SRC[sfl].Opcode, resw)) {	//opcode 가 resw 일 경우 operand * 3 byte 만큼 주소 더해줌
+				ST[sl].Loc = cur_loc;
+				LT[ll].Loc = cur_loc;
+				cur_loc += 3 * strtol(SRC[sfl].Operand, NULL, 16);
+				ll++, sl++;
+			}
+			else if (0 == strcmp(SRC[sfl].Opcode, word)) {	//opcode 가 word 일 경우 3byte 만큼 더해줌
+				ST[sl].Loc = cur_loc;
+				LT[ll].Loc = cur_loc;
+				cur_loc += 3;
+				ll++, sl++;
+			}
+			else if (0 == strcmp(SRC[sfl].Opcode, byte)) {	//opcode 가 byte 일 경우 operand 에서 character 명시를 위한 세글자(c'')를 제외한 나머지 byte 만 저장
+				ST[sl].Loc = cur_loc;
+				LT[ll].Loc = cur_loc;
+				cur_loc += strlen(SRC[sfl].Operand) - 3;
+				ll++, sl++;
+			}
+			else {	//일반적인 명령어의 경우 3byte 더해주고 다음 symtab index로 넘어감
+				ST[sl].Loc = cur_loc;
+				LT[ll].Loc = cur_loc;
+				cur_loc += 3;
+				ll++, sl++;
+			}
+		}
+		else {	//label 이 없는 경우 일반적인 명령어 3byte 더해줌
+			LT[ll].Loc = cur_loc;
+			cur_loc += 3;
+			ll++;
+		}
+
+	}
+
+	for (i = 0; i <= sl - 1; i++) {	//symtab 줄만큼만 검사
+		if (ST[i].flag == 1)	//이전에 중복된 label 있어 flag 1로 변한 경우 중복 확인하지 않고 다음으로 넘어간다
+			continue;
+		for (j = i + 1; j <= sl; j++) {	//중복 검사. 중복될 경우 두 label 다 flag 1로 바꿔준다
+			if (0 == strcmp(ST[i].Label, ST[j].Label)) {
+				ST[i].flag = 1;
+				ST[j].flag = 1;
+				break;
+			}
+			else
+				ST[i].flag = 0;
+		}
+	}
+
+	for (i = 0; i <= sl - 1; i++) {	//symtable 출력
+		itoa(ST[i].Loc, ST[i].sLoc, 16);
+		printf("Label : %s,\tLoc : %s,\tflag : %d\n", ST[i].Label, ST[i].sLoc, ST[i].flag);
+	}
+	puts("");
+
+	return sl;	//symtab 길이 return
+}
+
+void makeIntFile(FILE* out, int srcnum) {	//INTFILE 생성 함수
+	int i;
+
+	for (i = 0; i <= srcnum - 1; i++) {
+		fprintf(out, "%x\t%s\t%s\t%s\n", LT[i].Loc, SRC[i].Label, SRC[i].Opcode, SRC[i].Operand);
+	}
+	for (i = 0; i <= srcnum - 1; i++) {	//화면에도 출력
+		printf("%x\t%s\t%s\t%s\n", LT[i].Loc, SRC[i].Label, SRC[i].Opcode, SRC[i].Operand);
+	}
+	puts("");
+}
+
+
+
+void makeObjectCode(int src_num, int op_num, int sym_num) {	//옵젝코드 생성 함수
+
+	int i, j, s;
+	char start[] = "start", word[] = "word", byte[] = "byte";
+	char resb[] = "resb", resw[] = "resw", end[] = "end";
+
+	for (j = 0; j <= src_num; j++) {	//생성해놓은 srcfile 자료구조에서 opcode와 operand 이용해 옵젝코드 생성
+
+		char A[100] = { '\0' };
+		int flag = 0, flag2 = 0;	//일치하는 opcode와 label 있는지 여부. 0이면 못찾은 상태
+
+		for (s = 0; s <= op_num; s++) {
+
+			//opcode가 start, end, word, byte, resb, resw 일 경우 옵젝코드 설정
+			if (0 == strcmp(SRC[j].Opcode, start)) {	//start 인 경우 옵젝코드 없고 다음으로 넘어감
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+				break;
+			}
+			else if (0 == strcmp(SRC[j].Opcode, end)) {	//end 일 경우 옵젝코드 없고 함수 종료
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+				return;
+			}
+			else if (0 == strcmp(SRC[j].Opcode, word)) {	//word 일 경우
+				int num = atoi(SRC[j].Operand);	//십진수 형태 operand 16진수 정수로 변환
+				sprintf(A, "%x",num);	//16진수 정수 A에 문자열로 변환해 넣어줌
+				for (i = 0; i < 6 - strlen(A); i++) {	//변환된 16진수 제외 앞부분 0으로 채워준줌
+					strcat(OC[j].code, "0");
+				}
+				strcat(OC[j].code, A);
+
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+				break;
+			}
+			else if (0 == strcmp(SRC[j].Opcode, byte)) {	//byte 인 경우 ascii 코드로 변환해 저장
+				int i;
+				for (i = 2; i < strlen(SRC[j].Operand) - 1; i++) {	//앞 c' 뒤부터 ' 전까지 저장
+					sprintf(A, "%x", (int)SRC[j].Operand[i]);
+					strcat(OC[j].code, A);
+				}
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+				break;
+			}
+			else if (0 == strcmp(SRC[j].Opcode, resb)) {	//resb인 경우 옵젝코드 없다
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+				break;
+			}
+			else if (0 == strcmp(SRC[j].Opcode, resw)) {	//resw인 경우 옵젝코드 없다
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+				break;
+			}
+
+
+			if (0 == strcmp(SRC[j].Opcode, strlwr(OP[s].instruction))) {	//optab에서 instruction 소문자로 바꿔준 후 opcode 와 대조. instruction 찾았을 경우
+
+				flag = 1;	//instruction 찾았음을 표시
+				int length = strlen(SRC[j].Operand);
+				for (i = 0; i <= sym_num; i++) {
+
+					if (SRC[j].Operand[strlen(SRC[j].Operand) - 2] == ',') {
+
+						length = strlen(SRC[j].Operand) - 2;
+
+					}
+					if (0 == strncmp(SRC[j].Operand, ST[i].Label, length)) {	//instruction, label 다 찾은 경우
+						char B[] = { '\0' };
+						flag2 = 1;	//label 찾았음 표시
+
+						strcat(OC[j].code, OP[s].code);
+						strcat(OC[j].code, ST[i].sLoc);
+						printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+						break;
+					}
+					else if (i == sym_num && flag2 == 0) {	//instruction은 찾았지만 label 못찾았을 경우
+						strcpy(OC[j].code, "");
+						printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+						puts(" **** undefined symbol in operand");
+						printf("%d\n", strlen(SRC[j].Operand));
+					}
+				}
+			}
+			else if (s == op_num && flag == 0) {	//instruction 못 찾은 경우
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[j].Loc, OC[j].code, SRC[j].Label, SRC[j].Opcode, SRC[j].Operand);
+				puts(" **** undefined operation in operand");
+			}
+		}
+	}
+}
+
+void ObjFile(int src_num, int op_num, int sym_num) {	//OBJFILE 생성 함수
+
+	FILE* out = fopen("OBJFILE.txt", "w");	//OBJFILE 쓰기용으로 생성 혹은 열기
+
+	int j, t;
+	char start[] = "start", word[] = "word", byte[] = "byte";
+	char resb[] = "resb", resw[] = "resw", end[] = "end";
+	int linesize = 0;	//레코드 길이 파악(byte)
+
+	for (t = 0; t <= src_num; t++) {
+		int line_next = 0, r_next = 0;	//레코드 초과로 다음줄 넘어간 경우와 rewb, resw를 만나 넘어간 경우 구별
+
+		if (0 == strcmp(SRC[t].Opcode, start)) {	//start 만난 경우
+			printf("H%s\t%06s%06x", SRC[0].Label, SRC[0].Operand, LT[src_num].Loc - LT[0].Loc);	//H 레코드 출력
+			fprintf(out, "H%s\t%06s%06x", SRC[0].Label, SRC[0].Operand, LT[src_num].Loc - LT[0].Loc);	//H 레코드 OBJFILE에 저장
+			linesize = 0;	//레코드 길이 초기화
+		}
+		else if (0 == strcmp(SRC[t].Opcode, end)) {	//end 만난 경우
+			printf("\nE%06x\n", LT[0].Loc);	//E 레코드 출력
+			fprintf(out, "\nE%06x", LT[0].Loc);
+			break;	//루프 탈출
+		}
+		else {
+			int line_flag = 0, r_flag = 0;	//레코드 초과로 다음줄 넘어간 경우와 rewb, resw를 만나 넘어간 경우 구별
+			int tt = 0;
+
+			for (int x = t; x <= src_num; x++) {	//레코드 길이 먼저 파악하는 루프
+				if (linesize > 30) {	//레코드 길이 30byte 넘어간 경우
+					linesize -= strlen(OC[x-1].code)/2;	//30 넘어가기 바로 전의 레코드 길이 저장
+					printf("\nT%06x%x", LT[t].Loc, linesize);
+					fprintf(out, "\nT%06x%x", LT[t].Loc, linesize);
+					tt = x - 2;	//넘어가기 전의 옵젝코드까지 레코드에 기록할 것이므로 넘어가기 전의 인덱스 파악
+					linesize = 0;	//레코드 길이 초기화
+					line_flag = 1;	//레코드 초과로 루프 탈출했음을 표시
+					line_next = x - 1;	//다음 루프 때 초과한 인덱스부터 시작할 것이므로 따로 저장
+					break;
+				}
+				else if (0 == strcmp(SRC[x].Opcode, resb) || 0 == strcmp(SRC[x].Opcode, resw)) {	//resb나 resw 만난 경우
+					tt = x - 1;	//resb나 resw 전까지의 옵젝코드 저장
+					while (0 == strcmp(SRC[x].Opcode, resb) || 0 == strcmp(SRC[x].Opcode, resw)) {	//연속되는 res 넘어가줌
+						x++;
+					}
+					printf("\nT%06x%x", LT[t].Loc, linesize);
+					fprintf(out, "\nT%06x%x", LT[t].Loc, linesize);
+					linesize = 0;	
+					r_flag = 1;	//res 만나 루프 탈출했음을 표시
+					r_next = x-1;	//최종 res 다음부터 시작
+					break;
+				}
+				else {
+					linesize += strlen(OC[x].code)/2;	//문자열 2칸을 1byte로 취급
+				}
+			}
+			for (int x = t; x <= tt; x++) {	//옵젝코드 출력
+				printf("%s", OC[x].code);
+				fprintf(out, "%s", OC[x].code);
+			}
+			//옵젝코드 출력 후 루프 탈출 원인에 따라 시작점 지정
+			if (line_flag == 1) t = line_next-1;
+			else if (r_flag == 1) t = r_next;
+		}
+	}
+	
+	fclose(out);
+}
