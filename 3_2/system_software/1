@@ -64,7 +64,7 @@ int main() {
 	char fname[200];
 
 	printf("파일 이름 입력: ");
-	scanf("%s",fname);
+	scanf("%s", fname);
 
 	Read(fname);
 
@@ -267,7 +267,7 @@ int makeSymTab(int i) {
 
 	for (t = 0; t <= s - 1; t++) {
 		itoa(ST[t].Loc, ST[t].sLoc, 16);
-		printf("Label : %s,\tLoc : %x,\tflag : %d\n", ST[t].Label, ST[t].Loc, ST[t].flag);
+		printf("Label : %s,\tLoc : %s,\tflag : %d\n", ST[t].Label, ST[t].sLoc, ST[t].flag);
 	}
 	puts("");
 	return s;
@@ -305,7 +305,7 @@ void makeObjectCode(int srcnum, int opnum, int symnum) {	//옵젝코드 생성 �
 			}
 			else if (0 == strcmp(S[t].Opcode, end)) {
 				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
-				break;
+				return;
 			}
 			else if (0 == strcmp(S[t].Opcode, word)) {
 				for (int i = 0; i < 6 - strlen(S[t].Operand); i++) {
@@ -334,15 +334,25 @@ void makeObjectCode(int srcnum, int opnum, int symnum) {	//옵젝코드 생성 �
 				break;
 			}
 
-
+			
 
 			if (0 == strcmp(S[t].Opcode, strlwr(O[s].instruction))) {	//optab에서 instruction 소문자로 바꿔준 후 opcode 와 대조. instruction 찾았을 경우
-				flag = 1;	//instruction 찾았음을 표시
 
+				flag = 1;	//instruction 찾았음을 표시
+				int length = strlen(S[t].Operand);
 				for (j = 0; j <= symnum; j++) {
-					if (0 == strncmp(S[t].Operand, ST[j].Label, strlen(ST[j].Label))) {	//instruction, label 다 찾은 경우
+
+					if (S[t].Operand[strlen(S[t].Operand) - 2] == ',') {
+
+						length = strlen(S[t].Operand) - 2;
+
+					}
+					if (0 == strncmp(S[t].Operand, ST[j].Label, length)) {	//instruction, label 다 찾은 경우
+						char B[] = { '\0' };
 						flag2 = 1;	//label 찾았음 표시
-						strcpy(OC[t].code, strcat(O[s].code, ST[j].sLoc));
+						
+						strcat(OC[t].code, O[s].code);
+						strcat(OC[t].code,ST[j].sLoc);
 						printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
 						break;
 					}
@@ -350,6 +360,7 @@ void makeObjectCode(int srcnum, int opnum, int symnum) {	//옵젝코드 생성 �
 						strcpy(OC[t].code, "");
 						printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
 						puts(" **** undefined symbol in operand");
+						printf("%d\n", strlen(S[t].Operand));
 					}
 				}
 			}
@@ -362,7 +373,7 @@ void makeObjectCode(int srcnum, int opnum, int symnum) {	//옵젝코드 생성 �
 }
 
 void Read(const char* fname) {
-	
+
 	FILE* ifp2 = fopen("optab.txt", "r");	//optab 읽기용으로 open
 	FILE* OUT = fopen("INTFILE.txt", "w");	//INTFILE 쓰기용으로 open
 	FILE* fp = fopen(fname, "r");
@@ -395,7 +406,6 @@ void Read(const char* fname) {
 }
 
 void ObjFile(FILE* out, int srcnum, int opnum, int symnum) {	//OBJFILE 생성
-
 	int j, t;
 	char start[] = "start", word[] = "word", byte[] = "byte";
 	char resb[] = "resb", resw[] = "resw", end[] = "end";
@@ -404,125 +414,80 @@ void ObjFile(FILE* out, int srcnum, int opnum, int symnum) {	//OBJFILE 생성
 	for (t = 0; t <= srcnum; t++) {
 
 		char A[100] = { '\0' };
-		int flag = 0, flag2 = 0;	//일치하는 opcode와 label 있는지 여부. 0이면 못찾은 상태
-		
 
 		if (0 == strcmp(S[t].Opcode, start)) {
 			printf("H%s\t%06s%06x\nT", S[0].Label, S[0].Operand, LT[srcnum].Loc - LT[0].Loc);
-			fprintf(out,"H%s\t%06s%06x\nT", S[0].Label, S[0].Operand, LT[srcnum].Loc - LT[0].Loc);
-			t++;
+			fprintf(out, "H%s\t%06s%06x\nT", S[0].Label, S[0].Operand, LT[srcnum].Loc - LT[0].Loc);
+			break;
+		}
+		else if (0 == strcmp(S[t].Opcode, end)) {
+			printf("\nE%06x\n", LT[0].Loc);
+			fprintf(out, "\nE%06x", LT[0].Loc);
+			return;
+		}
+		if (linesize > 30 || 0 == strcmp(S[t].Opcode, resb) || 0 == strcmp(S[t].Opcode, resw)) {
+			while (0 == strcmp(S[t].Opcode, resb) || 0 == strcmp(S[t].Opcode, resw)) {
+				t++;
+			}
+		}
+
+		else {
+			linesize += LT[t + 1].Loc - LT[t].Loc;
+			int mem = t;
+			for (t = mem; t <= srcnum; t++) {
+				if (linesize > 30) {
+					printf("%x", linesize);
+					fprintf(out, "%x", linesize);
+					break;
+				}
+				else if (0 == strcmp(S[t].Opcode, resb) || 0 == strcmp(S[t].Opcode, resw) || 0 == strcmp(S[t].Opcode, end)) {
+					printf("%x", linesize);
+					fprintf(out, "%x", linesize);
+					break;
+				}
+				if (0 == strcmp(S[t].Opcode, word)) {
+					for (int i = 0; i < 6 - strlen(S[t].Operand); i++) {
+						strcat(OC[t].code, "0");
+					}
+					strcat(OC[t].code, S[t].Operand);
+					printf("%s", OC[t].code);
+					fprintf(out, "%s", OC[t].code);
+					linesize += strlen(OC[t].code);
+					break;
+				}
+				else if (0 == strcmp(S[t].Opcode, byte)) {
+					int i;
+					for (i = 2; i < strlen(S[t].Operand) - 1; i++) {
+						sprintf(A, "%x", (int)S[t].Operand[i]);
+						strcat(OC[t].code, A);
+					}
+					printf("%s", OC[t].code);
+					fprintf(out, "%s", OC[t].code);
+					linesize += strlen(OC[t].code);
+					break;
+				}
+			}
+		}
+		printf("T%06x", LT[t]);
+		linesize = 0;
 		}
 
 		for (int s = 0; s <= opnum; s++) {
-			if (linesize > 30 || 0 == strcmp(S[t].Opcode, resb) || 0 == strcmp(S[t].Opcode, resw)) {
-				while (0 == strcmp(S[t].Opcode, resb) || 0 == strcmp(S[t].Opcode, resw)) {
-					t++;
-					
-				}
-				if (0 == strcmp(S[t].Opcode, end)) {
-					printf("\nE%06x", LT[0].Loc);
-					fprintf(out,"\nE%06x", LT[0].Loc);
-					break;
-				}
-				else {
-						int linesize = 0;
-
-						for (t = 0; t <= srcnum; t++) {
-
-							for (int s = 0; s <= opnum; s++) {
-								if (linesize > 30 || 0 == strcmp(S[t].Opcode, resb) || 0 == strcmp(S[t].Opcode, resw)) {
-									while (0 == strcmp(S[t].Opcode, resb) || 0 == strcmp(S[t].Opcode, resw)) {
-										t++;
-
-									}
-									if (0 == strcmp(S[t].Opcode, end)) {
-										printf("\nE%06x", LT[0].Loc);
-										fprintf(out, "\nE%06x", LT[0].Loc);
-										break;
-									}
-									else {
-										printf("\nT%06x", LT[t].Loc);
-										fprintf(out, "\nT%06x", LT[t].Loc);
-										linesize = 0;
-									}
-
-								}
-
-								//opcode가 start, end, word, byte, resb, resw 일 경우 옵젝코드 설정
-
-
-								if (0 == strcmp(S[t].Opcode, word)) {
-									for (int i = 0; i < 6 - strlen(S[t].Operand); i++) {
-										strcat(OC[t].code, "0");
-									}
-									strcat(OC[t].code, S[t].Operand);
-									printf("%s", OC[t].code);
-									fprintf(out, "%s", OC[t].code);
-									linesize += strlen(OC[t].code);
-									break;
-								}
-								else if (0 == strcmp(S[t].Opcode, byte)) {
-									int i;
-									for (i = 2; i < strlen(S[t].Operand) - 1; i++) {
-										sprintf(A, "%x", (int)S[t].Operand[i]);
-										strcat(OC[t].code, A);
-									}
-									printf("%s", OC[t].code);
-									fprintf(out, "%s", OC[t].code);
-									linesize += strlen(OC[t].code);
-									break;
-								}
-
-
-								if (0 == strcmp(S[t].Opcode, strlwr(O[s].instruction))) {	//optab에서 instruction 소문자로 바꿔준 후 opcode 와 대조. instruction 찾았을 경우
-									flag = 1;	//instruction 찾았음을 표시
-
-									for (j = 0; j <= symnum; j++) {
-										if (0 == strncmp(S[t].Operand, ST[j].Label, strlen(ST[j].Label))) {	//instruction, label 다 찾은 경우
-											flag2 = 1;	//label 찾았음 표시
-											strcpy(OC[t].code, strcat(O[s].code, ST[j].sLoc));
-											printf("%s", OC[t].code);
-											fprintf(out, "%s", OC[t].code);
-											linesize += strlen(OC[t].code);
-											break;
-										}
-										else if (j == symnum && flag2 == 0) {	//instruction은 찾았지만 label 못찾았을 경우
-											strcpy(OC[t].code, "");
-											printf("%s", OC[t].code);
-											fprintf(out, "%s", OC[t].code);
-											linesize += strlen(OC[t].code);
-											puts(" **** undefined symbol in operand");
-											break;
-										}
-									}
-								}
-								else if (s == opnum && flag == 0) {	//instruction 못 찾은 경우
-									printf("%s", OC[t].code);
-									fprintf(out, "%s", OC[t].code);
-									linesize += strlen(OC[t].code);
-									puts(" **** undefined operation in operand");
-								}
-							}
-						}
-					}
-					printf("\nT%06x", LT[t].Loc);
-					fprintf(out,"\nT%06x", LT[t].Loc);
-					linesize = 0;
-				}
-				
-			}
-
 			//opcode가 start, end, word, byte, resb, resw 일 경우 옵젝코드 설정
-			
-			
-			if (0 == strcmp(S[t].Opcode, word)) {
+			if (0 == strcmp(S[t].Opcode, start)) {
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
+				break;
+			}
+			else if (0 == strcmp(S[t].Opcode, end)) {
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
+				return;
+			}
+			else if (0 == strcmp(S[t].Opcode, word)) {
 				for (int i = 0; i < 6 - strlen(S[t].Operand); i++) {
 					strcat(OC[t].code, "0");
 				}
 				strcat(OC[t].code, S[t].Operand);
-				printf("%s", OC[t].code);
-				fprintf(out,"%s", OC[t].code);
-				linesize += strlen(OC[t].code);
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
 				break;
 			}
 			else if (0 == strcmp(S[t].Opcode, byte)) {
@@ -531,39 +496,51 @@ void ObjFile(FILE* out, int srcnum, int opnum, int symnum) {	//OBJFILE 생성
 					sprintf(A, "%x", (int)S[t].Operand[i]);
 					strcat(OC[t].code, A);
 				}
-				printf("%s", OC[t].code);
-				fprintf(out,"%s", OC[t].code);
-				linesize += strlen(OC[t].code);
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
+
+				break;
+			}
+			else if (0 == strcmp(S[t].Opcode, resb)) {
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
+				break;
+			}
+			else if (0 == strcmp(S[t].Opcode, resw)) {
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
 				break;
 			}
 
 
-			if (0 == strcmp(S[t].Opcode, strlwr(O[s].instruction))) {	//optab에서 instruction 소문자로 바꿔준 후 opcode 와 대조. instruction 찾았을 경우
-				flag = 1;	//instruction 찾았음을 표시
 
+			if (0 == strcmp(S[t].Opcode, strlwr(O[s].instruction))) {	//optab에서 instruction 소문자로 바꿔준 후 opcode 와 대조. instruction 찾았을 경우
+
+				flag = 1;	//instruction 찾았음을 표시
+				int length = strlen(S[t].Operand);
 				for (j = 0; j <= symnum; j++) {
-					if (0 == strncmp(S[t].Operand, ST[j].Label,strlen(ST[j].Label))) {	//instruction, label 다 찾은 경우
+
+					if (S[t].Operand[strlen(S[t].Operand) - 2] == ',') {
+
+						length = strlen(S[t].Operand) - 2;
+
+					}
+					if (0 == strncmp(S[t].Operand, ST[j].Label, length)) {	//instruction, label 다 찾은 경우
+						char B[] = { '\0' };
 						flag2 = 1;	//label 찾았음 표시
-						strcpy(OC[t].code, strcat(O[s].code, ST[j].sLoc));
-						printf("%s", OC[t].code);
-						fprintf(out,"%s", OC[t].code);
-						linesize += strlen(OC[t].code);
+
+						strcat(OC[t].code, O[s].code);
+						strcat(OC[t].code, ST[j].sLoc);
+						printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
 						break;
 					}
 					else if (j == symnum && flag2 == 0) {	//instruction은 찾았지만 label 못찾았을 경우
 						strcpy(OC[t].code, "");
-						printf("%s", OC[t].code);
-						fprintf(out, "%s", OC[t].code);
-						linesize += strlen(OC[t].code);
+						printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
 						puts(" **** undefined symbol in operand");
-						break;
+						printf("%d\n", strlen(S[t].Operand));
 					}
 				}
 			}
 			else if (s == opnum && flag == 0) {	//instruction 못 찾은 경우
-				printf("%s", OC[t].code);
-				fprintf(out, "%s", OC[t].code);
-				linesize += strlen(OC[t].code);
+				printf("%x\t%s\t%s\t%s\t%s\n", LT[t].Loc, OC[t].code, S[t].Label, S[t].Opcode, S[t].Operand);
 				puts(" **** undefined operation in operand");
 			}
 		}
