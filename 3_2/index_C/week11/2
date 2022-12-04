@@ -1,0 +1,200 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define left 2
+#define right 1
+#define new 0
+
+typedef struct NodeStruct	//make nodestructure for binary linked list
+{
+	int value;
+	struct NodeStruct* leftChild;
+	struct NodeStruct* rightChild;
+	int flag;	//use flag to identify that the new node has been move to left or right
+}Node;
+
+Node* root = NULL;	//make root of tree
+
+Node* BST_insert(Node* root, int value, int flag)	//insert node function
+{
+	if (root == NULL)	//if there are no node in tree
+	{	//make root node by insert value
+		root = (Node*)malloc(sizeof(Node));
+		root->leftChild = root->rightChild = NULL;
+		root->value = value;
+		root->flag = flag;
+		return root;	
+	}
+	else	//if there are nodes in tree
+	{	//find correct location of new value and put in the correct place
+		if (root->value > value) 
+			root->leftChild = BST_insert(root->leftChild, value, left);
+
+		else 
+			root->rightChild = BST_insert(root->rightChild, value, right);
+	}
+	return root;	//return inserted tree
+}
+
+Node* findMinNode(Node* root)	//find the smallest node in tree
+{
+	Node* tmp = root;
+	while (tmp->leftChild != NULL)
+		tmp = tmp->leftChild;
+	return tmp;	//return smallest node
+}
+
+Node* BST_delete(Node* root, int value)	//delete node function
+{
+	Node* tNode = NULL;
+	if (root == NULL)	//if we can't find the node we looking for or there are no node in tree
+		return NULL;
+
+	if (root->value > value)
+		root->leftChild = BST_delete(root->leftChild, value);
+	else if (root->value < value)
+		root->rightChild = BST_delete(root->rightChild, value);
+	else	//if we find node
+	{
+		//if the node has both child
+		if (root->rightChild != NULL && root->leftChild != NULL)
+		{
+			tNode = findMinNode(root->rightChild);	//find the smallest node in right child tree
+			root->value = tNode->value;	//copy value in the place that we are going to delete
+			root->rightChild = BST_delete(root->rightChild, tNode->value);
+		}
+		else	//if the node has only one child or none
+		{
+			tNode = (root->leftChild == NULL) ? root->rightChild : root->leftChild;	//just pull up child to the deleting node place
+			free(root);
+			return tNode;	//this would be need when we meet both child at the upper paragraph
+		}
+	}
+
+	return root;	//return changed tree
+}
+
+Node* BST_search(Node* root, int value)	//node searching function
+{
+	if (root == NULL)
+		return NULL;
+
+	if (root->value == value)
+		return root;
+	else if (root->value > value)
+		return BST_search(root->leftChild, value);
+	else
+		return BST_search(root->rightChild, value);
+}	//return the node that we found or NULL
+
+void BST_print(Node* root, int num)	//display tree function
+{	
+	if (root == NULL)	//display until we get NULL
+		return;
+	
+	int i = 0, k = 0;
+
+	if (root->flag == new) {
+		for (i = 0; i < BST_num(root->leftChild)+10; i++) {
+			printf(" ");
+			k++;
+		}
+		printf("%d\n", root->value);
+	}
+	else if (root->flag == left) {
+		for (i = 0; i < num-1; i++) {
+			printf(" ");
+		}
+		puts("/");
+		for (i = 0; i < num-2; i++) {
+			printf(" ");
+			k++;
+		}
+		printf("%d\n", root->value);
+	}
+	else {
+		for (i = 0; i < num; i++) {
+			printf(" ");
+		}
+		puts("＼");
+		for (i = 0; i < num+2; i++) {
+			printf(" ");
+			k++;
+		}
+		printf("%d\n", root->value);
+	}
+	BST_print(root->leftChild, k);
+
+	BST_print(root->rightChild, k+1);
+
+	//flag 사용해서 왼쪽으로 생기면 / 바로 출력 이런식으로 구성해보자
+}
+
+int BST_num(Node* root)	//display tree function
+{
+	if (root == NULL)	//display until we get NULL
+		return 1;
+
+	int num=BST_num(root->leftChild)+BST_num(root->rightChild);
+
+	return num;
+}
+
+int main()
+{
+	/*root = BST_insert(root, 1, new);
+	root = BST_insert(root, 2, new);
+	root = BST_insert(root, 3, new);
+	root = BST_insert(root, 4, new);
+	root = BST_insert(root, 5, new);
+	root = BST_insert(root, 6, new);
+	BST_print(root,0);
+	puts("-----------------------------------------");
+	root = BST_delete(root, 3);
+
+	BST_print(root,0);*/
+
+	/*root = BST_insert(root, 6, new);
+	root = BST_insert(root, 5, new);
+	root = BST_insert(root, 4, new);
+	root = BST_insert(root, 3, new);
+	root = BST_insert(root, 2, new);
+	root = BST_insert(root, 1, new);
+	BST_print(root,0);
+	puts("-----------------------------------------");
+	root = BST_delete(root, 3);
+
+	BST_print(root,0);*/
+
+	/*root = BST_insert(root, 11, new);
+	root = BST_insert(root, 13, new);
+	root = BST_insert(root, 22, new);
+	root = BST_insert(root, 19, new);
+	root = BST_insert(root, 5, new);
+	root = BST_insert(root, 2, new);
+	root = BST_insert(root, 3, new);
+	root = BST_insert(root, 9, new);
+	root = BST_insert(root, 8, new);
+	root = BST_insert(root, 18, new);
+	BST_print(root, 0);
+	puts("-----------------------------------------");
+	root = BST_delete(root, 9);
+
+	BST_print(root, 0);*/
+
+	root = BST_insert(root, 10, new);
+	root = BST_insert(root, 13, new);
+	root = BST_insert(root, 8, new);
+	root = BST_insert(root, 5, new);
+	root = BST_insert(root, 1, new);
+	root = BST_insert(root, 19, new);
+	root = BST_insert(root, 3, new);
+	root = BST_insert(root, 7, new);
+	root = BST_insert(root, 11, new);
+	root = BST_insert(root, 16, new);
+	BST_print(root, 0);
+	puts("-----------------------------------------");
+	root = BST_delete(root, 7);
+
+	BST_print(root, 0);
+}
