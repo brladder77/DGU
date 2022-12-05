@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_VERTICES 50
+
+typedef struct GraphNode {	//그래프 정점 노드
+	int vertex;	//정점	
+	struct GraphNode* link;	//다른 정점 노드로의 연결
+} GraphNode;
+
+typedef struct GraphType {
+	int n;	//정점 개수
+	GraphNode* adj_list[MAX_VERTICES];	//정점 노드 리스트 생성
+} GraphType;
+
+void init(GraphType* g);	//정점 노드 리스트 초기화
+void insert_vertex(GraphType* g, int v);	//정점 삽입
+void insert_edge(GraphType* g, int u, int v);	//간선 추가
+void print_adj_list(GraphType* g);
+
+
+int main()
+{
+	GraphType* g;
+	g = (GraphType*)malloc(sizeof(GraphType));
+	init(g);
+	//for (int i = 0; i < 4; i++)	//정점 4개 추가
+	//	insert_vertex(g, i);
+	//insert_edge(g, 0, 1);
+	//insert_edge(g, 1, 0);
+	//insert_edge(g, 0, 2);
+	//insert_edge(g, 2, 0);
+	//insert_edge(g, 1, 3);
+	//insert_edge(g, 3, 1);
+	//insert_edge(g, 1, 2);
+	//insert_edge(g, 2, 1);
+	//insert_edge(g, 2, 3);
+	//insert_edge(g, 3, 2);
+
+	//for (int i = 0; i < 5; i++)	//정점 5개 추가
+	//	insert_vertex(g, i);
+	//insert_edge(g, 0, 3);
+	//insert_edge(g, 3, 0);
+	//insert_edge(g, 0, 4);
+	//insert_edge(g, 4, 0);
+	//insert_edge(g, 1, 3);
+	//insert_edge(g, 3, 1);
+	//insert_edge(g, 1, 4);
+	//insert_edge(g, 4, 1);
+	//insert_edge(g, 2, 1);
+	//insert_edge(g, 1, 2);
+
+	for (int i = 0; i < 6; i++)	//정점 6개 추가
+		insert_vertex(g, i);
+	insert_edge(g, 0, 5);
+	insert_edge(g, 5, 0);
+	insert_edge(g, 0, 3);
+	insert_edge(g, 3, 0);
+	insert_edge(g, 1, 5);
+	insert_edge(g, 5, 1);
+	insert_edge(g, 1, 2);
+	insert_edge(g, 2, 1);
+	insert_edge(g, 2, 3);
+	insert_edge(g, 3, 2);
+	insert_edge(g, 4, 2);
+	insert_edge(g, 2, 4);
+
+	print_adj_list(g);
+
+	free(g);
+
+	return 0;
+
+
+}
+
+void init(GraphType* g) {	//정점 노드 리스트 초기화
+	int v;
+	g->n = 0;
+	for (v = 0; v < MAX_VERTICES; v++)
+		g->adj_list[v] = NULL;
+}
+
+void insert_vertex(GraphType* g, int v) {	//정점 삽입
+	if (((g->n) + 1) > MAX_VERTICES) {
+		printf("overflow");
+		return;
+	}
+	g->n++;	//정점 추가
+}
+
+void insert_edge(GraphType* g, int u, int v) {	//간선 추가
+	GraphNode* node;
+	if (u >= g->n || v >= g->n) {	//존재하지 않는 정점 이었을 경우
+		printf("vertex index error");
+		return;
+	}
+	node = (GraphNode*)malloc(sizeof(GraphNode));	//빈 정점 노드 생성
+	node->vertex = v;	//정점 v로 설정
+	node->link = g->adj_list[u];	//정점 v와 정점 노드 리스트의 u연결
+	//정점 u에 리스트로 연결되어 있던 인접 리스트 맨 뒤에 붙는다
+	g->adj_list[u] = node;
+}
+
+void print_adj_list(GraphType* g) {
+	for (int i = 0; i < g->n; i++) {
+		GraphNode* p = g->adj_list[i];	//인접리스트 순차출력
+		printf("정점 %d의 인접 리스트 : %d", i,i);
+		while (p != NULL) {
+			printf("->%d", p->vertex);
+			p = p->link;
+		}
+		printf("\n");
+	}
+}
