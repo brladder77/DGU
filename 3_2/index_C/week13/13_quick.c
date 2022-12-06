@@ -10,11 +10,11 @@ int main() {
 
 	srand(time(NULL));
 	int A[MAX];
-	for (int i = 0; i < MAX; i++) {			//1000 ÀÌÇÏ ·£´ý ¹è¿­ »ý¼º
+	for (int i = 0; i < MAX; i++) {			//1000 ì´í•˜ ëžœë¤ ë°°ì—´ ìƒì„±
 		A[i] = (rand() % 1000);
 	}
 
-	printf("ÃÊ±â : ");
+	printf("ì´ˆê¸° : ");
 	for (int i = 0; i < MAX; i++) {
 		printf("%d ", A[i]);
 	}
@@ -42,7 +42,7 @@ void QuickSort(int *A, int L, int R) {
 			right--;
 		if (left <= right) {			//if left and right doesn't meet
 			swap(A, left, right);
-			printf("swap ¹ß»ý : ");
+			printf("swap ë°œìƒ : ");
 			for (int t = 0; t < MAX; t++)
 				printf("%d ", A[t]);
 			puts("\n");
