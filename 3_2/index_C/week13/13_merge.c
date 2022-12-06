@@ -11,12 +11,12 @@ int main()
 	int i;
 	srand(time(NULL));
 	int A[MAX];
-	for (i = 0; i < MAX; i++) {			//1000 ÀÌÇÏ ·£´ý ¹è¿­ »ý¼º
+	for (i = 0; i < MAX; i++) {			//1000 ì´í•˜ ëžœë¤ ë°°ì—´ ìƒì„±
 		A[i] = (rand() % 1000);
 	}
 	int B[MAX] = { 0,};
 
-	printf("ÃÊ±â : ");
+	printf("ì´ˆê¸° : ");
 	for (i = 0; i < MAX; i++)
 		printf("%d ", A[i]);
 	puts("\n");
@@ -32,7 +32,7 @@ int main()
 }
 
 void Merge(int *A, int *B, int left, int mid, int right)
-{	//ÃÖ¼Ò ¿ø¼Ò 2°³ºÎÅÍ ÇÕº´
+{	//ìµœì†Œ ì›ì†Œ 2ê°œë¶€í„° í•©ë³‘
 	int LP, RP, BP, i;
 	LP = left;
 	RP = mid + 1;
@@ -40,22 +40,22 @@ void Merge(int *A, int *B, int left, int mid, int right)
 
 	while (BP <= right) {
 
-		if (RP > right)	//¿À¸¥ÂÊ ¹è¿­ ÀüºÎ º¹»ç µÇ¾úÀ» °æ¿ì ¿ÞÂÊ ¹è¿­ ³ª¸ÓÁö ±×´ë·Î º¹»çÇØ ³Ö¾îÁØ´Ù
+		if (RP > right)	//ì˜¤ë¥¸ìª½ ë°°ì—´ ì „ë¶€ ë³µì‚¬ ë˜ì—ˆì„ ê²½ìš° ì™¼ìª½ ë°°ì—´ ë‚˜ë¨¸ì§€ ê·¸ëŒ€ë¡œ ë³µì‚¬í•´ ë„£ì–´ì¤€ë‹¤
 			B[BP++] = A[LP++];
-		else if (LP > mid)	//¿ÞÂÊ ¹è¿­ ÀüºÎ º¹»çµÇ¾úÀ» °æ¿ì ¿À¸¥ÂÊ ¹è¿­ ³ª¸ÓÁö ±×´ë·Î º¹»çÇØ ³Ö¾îÁØ´Ù
+		else if (LP > mid)	//ì™¼ìª½ ë°°ì—´ ì „ë¶€ ë³µì‚¬ë˜ì—ˆì„ ê²½ìš° ì˜¤ë¥¸ìª½ ë°°ì—´ ë‚˜ë¨¸ì§€ ê·¸ëŒ€ë¡œ ë³µì‚¬í•´ ë„£ì–´ì¤€ë‹¤
 			B[BP++] = A[RP++];
 
-		else if (A[LP] <= A[RP]) {	//A³¢¸® ºñ±³ÇÏ´Â µí º¸ÀÌ³ª ÀÌ¹Ì Á¤·ÄÀÌ ¿Ï·áµÈ ³ª´²Áø µÎ ¹è¿­À» ºñ±³ÇÏ´Â °úÁ¤
-			//¿ÞÂÊ ¹è¿­ÀÇ ¾ÕºÎºÐº¸´Ù ¿À¸¥ÂÊ ºÎºÐÀÇ ¾ÕºÎºÐÀÌ ´õ Å¬ ¶§
-			B[BP++] = A[LP++];	//»õ·Î »ý¼ºÇÏ´Â ¹è¿­(B)ÀÇ ÇØ´ç ¼ø¼­¿¡ ¿ÞÂÊ ¹è¿­ÀÇ ¾ÕºÎºÐ º¹»ç
+		else if (A[LP] <= A[RP]) {	//Aë¼ë¦¬ ë¹„êµí•˜ëŠ” ë“¯ ë³´ì´ë‚˜ ì´ë¯¸ ì •ë ¬ì´ ì™„ë£Œëœ ë‚˜ëˆ ì§„ ë‘ ë°°ì—´ì„ ë¹„êµí•˜ëŠ” ê³¼ì •
+			//ì™¼ìª½ ë°°ì—´ì˜ ì•žë¶€ë¶„ë³´ë‹¤ ì˜¤ë¥¸ìª½ ë¶€ë¶„ì˜ ì•žë¶€ë¶„ì´ ë” í´ ë•Œ
+			B[BP++] = A[LP++];	//ìƒˆë¡œ ìƒì„±í•˜ëŠ” ë°°ì—´(B)ì˜ í•´ë‹¹ ìˆœì„œì— ì™¼ìª½ ë°°ì—´ì˜ ì•žë¶€ë¶„ ë³µì‚¬
 			printf("swap : ");
 			for (int t = 0; t < MAX; t++)
 				printf("%d ", B[t]);
 			puts("\n");
 		}
 		else if (A[LP] >= A[RP]) {
-			//¿ÞÂÊ ¹è¿­ÀÇ ¾ÕºÎºÐº¸´Ù ¿À¸¥ÂÊ ºÎºÐÀÇ ¾ÕºÎºÐÀÌ ´õ ÀÛÀ» ¶§
-			B[BP++] = A[RP++];	//»õ·Î »ý¼ºÇÏ´Â ¹è¿­(B)ÀÇ ÇØ´ç ¼ø¼­¿¡ ¿À¸¥ÂÊ ¹è¿­ÀÇ ¾ÕºÎºÐ º¹»ç
+			//ì™¼ìª½ ë°°ì—´ì˜ ì•žë¶€ë¶„ë³´ë‹¤ ì˜¤ë¥¸ìª½ ë¶€ë¶„ì˜ ì•žë¶€ë¶„ì´ ë” ìž‘ì„ ë•Œ
+			B[BP++] = A[RP++];	//ìƒˆë¡œ ìƒì„±í•˜ëŠ” ë°°ì—´(B)ì˜ í•´ë‹¹ ìˆœì„œì— ì˜¤ë¥¸ìª½ ë°°ì—´ì˜ ì•žë¶€ë¶„ ë³µì‚¬
 			printf("swap : ");
 			for (int t = 0; t < MAX; t++)
 				printf("%d ", B[t]);
@@ -76,11 +76,11 @@ void MergeSort(int *A, int *B, int left, int right)
 	int mid;
 
 	if (left < right) {
-		mid = (left + right) / 2;	//°¡¿îµ¥ ±âÁØ ºÐÇÒ
+		mid = (left + right) / 2;	//ê°€ìš´ë° ê¸°ì¤€ ë¶„í• 
 		MergeSort(A, B, left, mid);
 		MergeSort(A, B, mid + 1, right);
 
-		//ÇÕº´Á¤·Ä
+		//í•©ë³‘ì •ë ¬
 		Merge(A, B, left, mid, right);
 	}
 }
