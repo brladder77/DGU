@@ -9,11 +9,11 @@ int main() {
 
 	srand(time(NULL));
 	int A[MAX];
-	for (int i = 0; i < MAX; i++) {			//1000 ÀÌÇÏ ·£´ı ¹è¿­ »ı¼º
+	for (int i = 0; i < MAX; i++) {			//1000 ì´í•˜ ëœë¤ ë°°ì—´ ìƒì„±
 		A[i] = (rand() % 1000);				
 	}
 	
-	int i = 0, j, swp_num = 0;	//swp_num´Â ¸î¹øÂ° ¹ÙÄûÀÇ ½º¿ÒÀÎÁö È®ÀÎÇÏ±â À§ÇØ »ç¿ë
+	int i = 0, j, swp_num = 0;	//swp_numëŠ” ëª‡ë²ˆì§¸ ë°”í€´ì˜ ìŠ¤ì™‘ì¸ì§€ í™•ì¸í•˜ê¸° ìœ„í•´ ì‚¬ìš©
 
 	puts("Array A");
 	for (j = 0; j < MAX; j++) {
@@ -29,9 +29,9 @@ void BubbleSort(int* pa, int i,int j, int *swp_num) {
 
 	int k;
 
-	if (j > MAX - 1) return;	//Á¤·Ä ¿Ï·á½Ã Á¾·á
+	if (j > MAX - 1) return;	//ì •ë ¬ ì™„ë£Œì‹œ ì¢…ë£Œ
 
-	if (*(pa + i) > * (pa + i + 1)) {	//¾Õº¸´Ù µÚ°¡ ´õ ÀÛÀ» °æ¿ì
+	if (*(pa + i) > * (pa + i + 1)) {	//ì•ë³´ë‹¤ ë’¤ê°€ ë” ì‘ì„ ê²½ìš°
 		swap(pa, i, swp_num);
 		printf("step %d_%d\n", j, *swp_num);
 		for (k = 0; k < MAX; k++) {
@@ -42,19 +42,19 @@ void BubbleSort(int* pa, int i,int j, int *swp_num) {
 
 	i++;
 
-	if (i > MAX-1 - j) {	//ÀÚ¸® ÀâÀº ³¡ºÎºĞµé Á¦¿Ü ÀüºÎ °Ë»ç½Ã
-		++j;	//¹ÙÄû ¼ö Ç¥½Ã
-		i = 0;	//Ã³À½ºÎÅÍ ´Ù½Ã °Ë»ç	
-		*swp_num = 0;	//½º¿Ò È½¼ö ÃÊ±âÈ­
+	if (i > MAX-1 - j) {	//ìë¦¬ ì¡ì€ ëë¶€ë¶„ë“¤ ì œì™¸ ì „ë¶€ ê²€ì‚¬ì‹œ
+		++j;	//ë°”í€´ ìˆ˜ í‘œì‹œ
+		i = 0;	//ì²˜ìŒë¶€í„° ë‹¤ì‹œ ê²€ì‚¬	
+		*swp_num = 0;	//ìŠ¤ì™‘ íšŸìˆ˜ ì´ˆê¸°í™”
 	}
 
 	BubbleSort(pa, i, j, swp_num);
 }
 
-void swap(int* pa, int i, int *swp_num) {	//¾Õ µÚ ¿ø¼Ò ±³È¯
+void swap(int* pa, int i, int *swp_num) {	//ì• ë’¤ ì›ì†Œ êµí™˜
 	int a = *(pa + i);
 	int b = *(pa + i + 1);
 	*(pa + i) = b;
 	*(pa + i + 1) = a;
-	++*swp_num;	//±³È¯ ¸î ¹ø Çß´ÂÁö Ç¥½Ã
+	++*swp_num;	//êµí™˜ ëª‡ ë²ˆ í–ˆëŠ”ì§€ í‘œì‹œ
 }
